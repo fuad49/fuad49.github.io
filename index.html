@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuad Al Firoj - Developer</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. Global CSS & Theme (Same as V2/V3) --- */
+        :root {
+            --bg-color: #2a2135;
+            --nav-color: #3a3145;
+            --primary-color: #f02d73;
+            --accent-color: #03dac6;
+            --text-color: #f0e8ff;
+            --text-secondary: #a098b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Headings use the FANCY font */
+        h1, h2, h3, .logo {
+            font-family: 'Fredoka One', cursive;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-color);
+        }
+
+        section {
+            padding: 5rem 0;
+            overflow: hidden; 
+        }
+
+        /* --- 2. PRELOADER ANIMATION (Back to CODE font) --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* === FONT CHANGE HERE === */
+            font-family: 'Press Start 2P', cursive; /* Back to PIXEL/CODE font */
+            color: var(--text-color);
+            font-size: 1.0rem; /* Adjusted for pixel font */
+            line-height: 1.8;
+            transition: opacity 0.7s ease-out, visibility 0.7s ease-out;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .code-animation {
+            text-align: left;
+            width: 90%;
+            max-width: 600px;
+        }
+        
+        .code-line {
+            display: block;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.4s ease-out forwards;
+        }
+        
+        /* Staggered animation for all 12 lines */
+        .code-line.line-1 { animation-delay: 0.2s; }
+        .code-line.line-2 { animation-delay: 0.4s; color: var(--accent-color); }
+        .code-line.line-3 { animation-delay: 0.8s; }
+        .code-line.line-4 { animation-delay: 1.2s; color: var(--accent-color); }
+        .code-line.line-5 { animation-delay: 1.6s; }
+        .code-line.line-6 { animation-delay: 2.0s; padding-left: 1.5rem; }
+        .code-line.line-7 { animation-delay: 2.4s; padding-left: 1.5rem; }
+        .code-line.line-8 { animation-delay: 2.8s; color: var(--primary-color); }
+        .code-line.line-9 { animation-delay: 3.2s; }
+        .code-line.line-10 { animation-delay: 3.6s; }
+        .code-line.line-11 { animation-delay: 4.0s; color: var(--accent-color); }
+        .code-line.line-12 { animation-delay: 4.4s; color: var(--primary-color); }
+
+        /* Blinking Cursor for Preloader */
+        .code-line .cursor {
+            display: inline-block;
+            background-color: var(--text-color);
+            width: 10px;
+            height: 1.1rem;
+            margin-left: 5px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* --- 3. Main Content (Starts hidden) --- */
+        #main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        
+        #main-content.visible {
+            opacity: 1;
+        }
+
+        /* --- 4. Navigation Bar (Same as V2/V3) --- */
+        nav {
+            background-color: var(--nav-color);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.7rem;
+            color: var(--text-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            position: relative;
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+        
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* --- 5. Hero / Landing Section (Same as V2/V3) --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 .static-text {
+            font-size: 3rem;
+            display: block;
+            color: var(--text-secondary);
+        }
+
+        .hero h1 .typing {
+            color: var(--primary-color);
+        }
+
+        .hero h1 .typing::after {
+            content: '|';
+            display: inline-block;
+            margin-left: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+            animation: blink 0.7s infinite;
+        }
+
+        /* General keyframe for both cursors */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-family: 'Fredoka One', cursive;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            border: 2px solid var(--primary-color);
+        }
+
+        .cta-button:hover {
+            color: var(--primary-color);
+            background-color: transparent;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(240, 45, 115, 0.4);
+        }
+
+        /* --- 6. Other Sections (Same as V2/V3) --- */
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+        }
+
+        #about p {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+        
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card {
+            background: var(--nav-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(240, 45, 115, 0.3);
+        }
+        
+        .project-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        /* --- 7. Scroll Fade-in Animations (Same as V2/V3) --- */
+        .animate-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .animate-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .project-card.animate-in:nth-child(1) { transition-delay: 0.1s; }
+        .project-card.animate-in:nth-child(2) { transition-delay: 0.2s; }
+        .project-card.animate-in:nth-child(3) { transition-delay: 0.3s; }
+
+        /* --- 8. Footer (Same as V2/V3) --- */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            background-color: var(--nav-color);
+            margin-top: 3rem;
+        }
+        
+        /* --- 9. Responsive Design --- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            .hero h1 .static-text {
+                font-size: 2rem;
+            }
+            nav .container {
+                flex-direction: column;
+            }
+            nav .logo {
+                margin-bottom: 1rem;
+            }
+            nav ul li {
+                margin: 0 0.5rem;
+            }
+            #preloader {
+                font-size: 0.7rem; /* Adjusted pixel font for small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="code-animation">
+            <span class="code-line line-1">Waking up...</span>
+            <span class="code-line line-2">Loading creative modules...</span>
+            <span class="code-line line-3">Initializing portfolio for:</span>
+            <span class="code-line line-4">User: Fuad Al Firoj</span>
+            <span class="code-line line-5">Status: Ready</span>
+            <span class="code-line line-6">Checking awesomeness level...</span>
+            <span class="code-line line-7">Level: 110%</span>
+            <span class="code-line line-8">All systems go!</span>
+            <span class="code-line line-9">.</span>
+            <span class="code-line line-10">.</span>
+            <span class="code-line line-11">Launching site...</span>
+            <span class="code-line line-12">Welcome! <span class="cursor"></span></span>
+        </div>
+    </div>
+    
+    <div id="main-content">
+
+        <nav>
+            <div class="container">
+                <a href="#" class="logo">Fuad Al Firoj</a>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <header class="hero">
+            <h1>
+                <span class="static-text">Hi, I am Fuad Al Firoj.</span>
+                I'm a <span class="typing"></span>
+            </h1>
+            <p class="subtitle">I build fun and fantastic applications for the web.</p>
+            <a href="#projects" class="cta-button">Check My Stuff!</a>
+        </header>
+
+        <main class="container">
+            <section id="about" class="animate-in">
+                <h2 class="section-title">About Me</h2>
+                <p>
+                    I am a passionate developer with a love for creating clean, functional, and beautiful digital experiences. 
+                    I specialize in [Your Specialty] and am always
+                    eager to learn new technologies and solve challenging problems.
+                </P>
+            </section>
+
+            <section id="projects" class="animate-in">
+                <h2 class="section-title">My Projects</h2>
+                <div class="project-grid">
+                    <div class="project-card animate-in">
+                        <h3>Project Title 1</h3>
+                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
+                    </div>
+                    <div class="project-card animate-in">
+                        <h3>Project Title 2</h3>
+                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
+                    </div>
+                    <div class="project-card animate-in">
+                        <h3>Project Title 3</h3>
+                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="contact" class="animate-in">
+                <h2 class="section-title">Get In Touch</h2>
+                <p style="text-align: center; font-size: 1.1rem;">
+                    I'm currently available for freelance work or new opportunities.
+                    <br>
+                    Feel free to email me at <a href="mailto:youremail@example.com">youremail@example.com</a>.
+                </p>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Fuad Al Firoj. All rights reserved.</p>
+        </footer>
+    
+    </div> <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. Preloader Logic ---
+            const preloader = document.getElementById('preloader');
+            const mainContent = document.getElementById('main-content');
+            
+            // Targets the last line
+            const lastLine = document.querySelector('.code-line.line-12');
+
+            lastLine.addEventListener('animationend', () => {
+                // Wait for cursor to blink a bit
+                setTimeout(() => {
+                    preloader.classList.add('hidden');
+                    mainContent.classList.add('visible');
+                }, 700); // Slightly longer pause
+            });
+
+
+            // --- 2. Hero Typing Animation Logic ---
+            const typingElement = document.querySelector('.hero .typing');
+            
+            const words = [
+                "Web Developer.",
+                "Creative Coder.",
+                "Problem Solver.",
+                "UI/UX Fanatic."
+            ];
+
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typingSpeed = 150;
+
+            function type() {
+                if (!mainContent.classList.contains('visible')) {
+                    setTimeout(type, 100); 
+                    return;
+                }
+
+                const currentWord = words[wordIndex];
+                
+                if (isDeleting) {
+                    typingElement.textContent = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                    typingSpeed = 75;
+                } else {
+                    typingElement.textContent = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                    typingSpeed = 150;
+                }
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    typingSpeed = 1500;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length;
+                }
+
+                setTimeout(type, typingSpeed);
+            }
+            type();
+
+
+            // --- 3. Scroll Animation Logic ---
+            const animatedElements = document.querySelectorAll('.animate-in');
+            
+            if (animatedElements.length > 0) {
+                const observer = new IntersectionObserver((entries) => {.
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target); 
+                        }
+                    });
+                }, {
+                    threshold: 0.1 
+                });
+
+                animatedElements.forEach(el => {
+                    observer.observe(el);
+                });
+            }
+            
+        });
+    </script>
+
+</body>
+</html>
