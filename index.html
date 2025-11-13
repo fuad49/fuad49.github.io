@@ -3,530 +3,1200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fuad Al Firoj - Developer</title>
+    <title>Fuad Al Firoj - System Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
-
     <style>
-        /* --- 1. Global CSS & Theme (Same as V2/V3) --- */
+        /* --- GLOBAL & CURSOR --- */
         :root {
-            --bg-color: #2a2135;
-            --nav-color: #3a3145;
-            --primary-color: #f02d73;
-            --accent-color: #03dac6;
-            --text-color: #f0e8ff;
-            --text-secondary: #a098b0;
+            /* Terminal */
+            --bg-color-term: #0a0f14;
+            --text-color: #ffb86c;
+            --cmd-color: #50fa7b;
+            --header-color: #ff79c6;
+            --border-color: #44475a;
+            --link-color: #8be9fd;
+            /* Win98 */
+            --bg-win98: #008080;
+            --ui-gray: #C0C0C0;
+            --ui-border-light: #FFFFFF;
+            --ui-border-dark: #808080;
+            --title-bar-blue: #000080;
         }
-
         * {
+            box-sizing: border-box;
+            cursor: none;
+        }
+        body {
+            background-color: var(--bg-color-term);
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            overflow: hidden;
+            height: 100vh;
+            font-family: 'Arial', sans-serif; 
         }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Headings use the FANCY font */
-        h1, h2, h3, .logo {
-            font-family: 'Fredoka One', cursive;
-            font-weight: 400;
-            letter-spacing: 1px;
-        }
-
-        a {
-            text-decoration: none;
-            color: var(--primary-color);
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--accent-color);
-        }
-
-        section {
-            padding: 5rem 0;
-            overflow: hidden; 
-        }
-
-        /* --- 2. PRELOADER ANIMATION (Back to CODE font) --- */
-        #preloader {
+        .hidden { display: none !important; }
+        
+        /* Custom Cursor */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--header-color);
+            border-radius: 50%;
             position: fixed;
-            top: 0;
-            left: 0;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10001;
+            transition: width 0.2s, height 0.2s;
+        }
+        .cursor-ring {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--text-color);
+            opacity: 0.7;
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.15s ease-out, opacity 0.2s;
+        }
+        .cursor-ring.expand {
+            transform: translate(-50%, -50%) scale(1.5);
+            opacity: 0.3;
+        }
+        .cursor-dot.expand {
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 121, 198, 0.4);
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            padding: 20px;
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--text-color);
+        }
+        #boot-sequence {
+            width: 100%; height: 100%;
+            overflow: hidden;
+        }
+        #boot-sequence p {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+            white-space: pre;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* --- TERMINAL VIEW --- */
+        .terminal {
+            background-color: var(--bg-color-term);
+            color: var(--text-color);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            width: 100%; height: 100vh;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+        }
+        .terminal::after { /* Scanline */
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 1;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.8; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0.8; }
+        }
+        .output { width: 100%; z-index: 2; position: relative; }
+        .output p, .output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .output h2 {
+            font-size: 1.2rem;
+            color: var(--header-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px; margin-top: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+        .output a { color: var(--link-color); text-decoration: underline; }
+        .output .ascii-art {
+            color: var(--link-color);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.5rem; /* Smaller font for large art */
+            letter-spacing: 0px;
+            line-height: 0.8; /* Tighter line height */
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .prompt-line { display: flex; margin-top: 5px; z-index: 2; position: relative; }
+        .prompt-symbol { margin-right: 10px; color: var(--header-color); }
+        #command-line { opacity: 0; width: 0; height: 0; padding: 0; border: 0; position: absolute; }
+        .fake-input { color: #fff; white-space: pre; }
+        .caret {
+            display: inline-block;
+            width: 10px;
+            height: 1.5rem;
+            background: var(--text-color);
+            animation: blink 1s infinite step-end;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color-term); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+        
+        /* --- WIN98 GUI VIEW --- */
+        .win98-desktop {
             width: 100%;
             height: 100vh;
-            background: var(--bg-color);
-            z-index: 9999;
+            background: var(--bg-win98);
+            overflow: hidden;
+            position: relative;
+            padding: 10px;
+            font-family: "Tahoma", "Arial", sans-serif;
+            font-size: 14px;
+        }
+        
+        .desktop-icon {
+            width: 90px;
+            height: 90px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            /* === FONT CHANGE HERE === */
-            font-family: 'Press Start 2P', cursive; /* Back to PIXEL/CODE font */
-            color: var(--text-color);
-            font-size: 1.0rem; /* Adjusted for pixel font */
-            line-height: 1.8;
-            transition: opacity 0.7s ease-out, visibility 0.7s ease-out;
-            opacity: 1;
-            visibility: visible;
+            justify-content: center;
+            text-align: center;
+            position: absolute;
         }
-
-        #preloader.hidden {
-            opacity: 0;
-            visibility: hidden;
+        .desktop-icon:hover { cursor: grab; }
+        .desktop-icon:active { cursor: grabbing; }
+        .desktop-icon i {
+            font-size: 32px;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
         }
-
-        .code-animation {
-            text-align: left;
-            width: 90%;
-            max-width: 600px;
+        .desktop-icon .icon-label {
+            color: #fff;
+            background: transparent;
+            padding: 2px 4px;
+            font-size: 12px;
+            margin-top: 5px;
+            user-select: none;
         }
-        
-        .code-line {
-            display: block;
-            margin-bottom: 0.5rem;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInUp 0.4s ease-out forwards;
+        .desktop-icon.selected .icon-label {
+            background: #000080;
+            border: 1px dotted #fff;
         }
         
-        /* Staggered animation for all 12 lines */
-        .code-line.line-1 { animation-delay: 0.2s; }
-        .code-line.line-2 { animation-delay: 0.4s; color: var(--accent-color); }
-        .code-line.line-3 { animation-delay: 0.8s; }
-        .code-line.line-4 { animation-delay: 1.2s; color: var(--accent-color); }
-        .code-line.line-5 { animation-delay: 1.6s; }
-        .code-line.line-6 { animation-delay: 2.0s; padding-left: 1.5rem; }
-        .code-line.line-7 { animation-delay: 2.4s; padding-left: 1.5rem; }
-        .code-line.line-8 { animation-delay: 2.8s; color: var(--primary-color); }
-        .code-line.line-9 { animation-delay: 3.2s; }
-        .code-line.line-10 { animation-delay: 3.6s; }
-        .code-line.line-11 { animation-delay: 4.0s; color: var(--accent-color); }
-        .code-line.line-12 { animation-delay: 4.4s; color: var(--primary-color); }
+        /* Icon Positions */
+        #icon-computer { top: 20px; left: 20px; }
+        #icon-whoami { top: 120px; left: 20px; } /* "About Me" Icon */
+        #icon-socials { top: 220px; left: 20px; }
+        #icon-projects { top: 320px; left: 20px; }
+        #icon-readme { top: 20px; left: 120px; }
+        #icon-education { top: 120px; left: 120px; }
 
-        /* Blinking Cursor for Preloader */
-        .code-line .cursor {
-            display: inline-block;
-            background-color: var(--text-color);
-            width: 10px;
-            height: 1.1rem;
-            margin-left: 5px;
-            animation: blink 0.7s infinite;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* --- 3. Main Content (Starts hidden) --- */
-        #main-content {
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
-        }
-        
-        #main-content.visible {
-            opacity: 1;
-        }
-
-        /* --- 4. Navigation Bar (Same as V2/V3) --- */
-        nav {
-            background-color: var(--nav-color);
-            padding: 1rem 0;
-            position: fixed;
+        .taskbar {
+            position: absolute;
+            bottom: 0; left: 0;
             width: 100%;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            height: 30px;
+            background: var(--ui-gray);
+            border-top: 2px solid var(--ui-border-light);
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            z-index: 9998;
         }
         
-        nav .container {
+        .start-button {
+            background: var(--ui-gray);
+            border: 2px solid var(--ui-border-light);
+            border-right-color: var(--ui-border-dark);
+            border-bottom-color: var(--ui-border-dark);
+            border-style: outset;
+            padding: 2px 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .start-button:active { border-style: inset; }
+        
+        .taskbar-tabs {
+            display: flex;
+            height: 100%;
+            margin-left: 10px;
+            flex-grow: 1; /* Allow tabs to take space */
+            overflow: hidden;
+        }
+        
+        .taskbar-tab {
+            background: var(--ui-gray);
+            border: 2px solid var(--ui-border-light);
+            border-right-color: var(--ui-border-dark);
+            border-bottom-color: var(--ui-border-dark);
+            border-style: outset;
+            padding: 0 10px;
+            margin: 2px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .taskbar-tab:active, .taskbar-tab.active {
+            border-style: inset;
+        }
+        
+        #taskbar-clock {
+            margin-left: auto; /* Pushes clock to the right */
+            height: 24px;
+            padding: 0 10px;
+            border: 2px solid var(--ui-border-dark);
+            border-right-color: var(--ui-border-light);
+            border-bottom-color: var(--ui-border-light);
+            border-style: inset;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        /* Win98 Window Template */
+        .window {
+            position: absolute;
+            top: 50px; left: 150px;
+            width: 500px; height: 300px;
+            min-width: 300px;
+            min-height: 200px;
+            background: var(--ui-gray);
+            border: 2px solid var(--ui-border-light);
+            border-right-color: var(--ui-border-dark);
+            border-bottom-color: var(--ui-border-dark);
+            border-style: outset;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .window.minimized { display: none; }
+        .window.maximized {
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: calc(100vh - 30px) !important;
+        }
+        .window.maximized .resize-grip { display: none; }
+        
+        .window-title-bar {
+            background: linear-gradient(to right, var(--title-bar-blue), #1084d0);
+            padding: 4px 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
+            user-select: none;
         }
-
-        nav .logo {
-            font-size: 1.7rem;
-            color: var(--text-color);
-        }
-
-        nav ul {
+        .window-title-bar:hover { cursor: grab; }
+        .window-title-bar:active { cursor: grabbing; }
+        
+        .title-bar-buttons { display: flex; }
+        .title-bar-button {
+            width: 20px; height: 20px;
+            background: var(--ui-gray);
+            border: 2px solid var(--ui-border-light);
+            border-right-color: var(--ui-border-dark);
+            border-bottom-color: var(--ui-border-dark);
+            border-style: outset;
+            margin-left: 3px;
+            font-weight: bold;
             display: flex;
-            list-style: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            padding: 0;
+            font-family: 'Times New Roman', Times, serif;
         }
-
-        nav ul li {
-            margin-left: 2rem;
-        }
-
-        nav ul li a {
-            color: var(--text-color);
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            position: relative;
-        }
+        .title-bar-button:active { border-style: inset; }
         
-        nav ul li a::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background-color: var(--primary-color);
-            transform: scaleX(0);
-            transform-origin: bottom right;
-            transition: transform 0.3s ease-out;
-        }
-        
-        nav ul li a:hover::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
-
-        /* --- 5. Hero / Landing Section (Same as V2/V3) --- */
-        .hero {
-            height: 100vh;
+        .window-body {
+            flex-grow: 1;
+            background: #fff;
+            color: #000;
+            border: 2px solid var(--ui-border-dark);
+            border-right-color: var(--ui-border-light);
+            border-bottom-color: var(--ui-border-light);
+            border-style: inset;
+            padding: 15px;
+            margin: 3px;
+            overflow-y: auto;
+            font-size: 14px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 1rem;
         }
-
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
+        
+        .resize-grip {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 15px;
+            height: 15px;
+            cursor: se-resize;
+            z-index: 101;
         }
-
-        .hero h1 .static-text {
-            font-size: 3rem;
+        
+        /* Window Content Styles */
+        .win-content h3 {
+            font-size: 18px;
+            color: var(--title-bar-blue);
+            border-bottom: 1px solid var(--ui-gray);
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+        .win-content p { margin-bottom: 15px; line-height: 1.5; }
+        .win-content ul { padding-left: 20px; margin-bottom: 15px; }
+        .win-content li { margin-bottom: 8px; }
+        .win-content .social-list a {
             display: block;
-            color: var(--text-secondary);
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #0000EE;
         }
-
-        .hero h1 .typing {
-            color: var(--primary-color);
+        .win-content .social-list a:hover { text-decoration: underline; }
+        .win-content .social-list i { margin-right: 10px; }
+        
+        #profile-img-gui {
+            max-width: 150px;
+            border-radius: 4px;
+            float: left;
+            margin-right: 15px;
+            margin-bottom: 10px;
         }
-
-        .hero h1 .typing::after {
-            content: '|';
-            display: inline-block;
-            margin-left: 5px;
-            font-weight: bold;
-            color: var(--primary-color);
-            animation: blink 0.7s infinite;
+        
+        /* File Manager styles */
+        .file-manager-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
-
-        /* General keyframe for both cursors */
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        .file-manager-list li {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            user-select: none;
         }
-
-        .hero .subtitle {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-weight: 700;
+        .file-manager-list li:hover {
+            background: #000080;
+            color: #fff;
         }
-
-        .cta-button {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--bg-color);
-            padding: 0.8rem 1.8rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-family: 'Fredoka One', cursive;
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-            border: 2px solid var(--primary-color);
-        }
-
-        .cta-button:hover {
-            color: var(--primary-color);
-            background-color: transparent;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(240, 45, 115, 0.4);
-        }
-
-        /* --- 6. Other Sections (Same as V2/V3) --- */
-        .section-title {
+        .file-manager-list li i {
+            margin-right: 10px;
+            width: 20px;
             text-align: center;
-            font-size: 3rem;
-            margin-bottom: 3rem;
-            color: var(--primary-color);
-        }
-
-        #about p {
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-            font-size: 1.1rem;
         }
         
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .project-card {
-            background: var(--nav-color);
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 10px 20px rgba(240, 45, 115, 0.3);
-        }
-        
-        .project-card h3 {
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.5rem;
-        }
-
-        /* --- 7. Scroll Fade-in Animations (Same as V2/V3) --- */
-        .animate-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        
-        .animate-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .project-card.animate-in:nth-child(1) { transition-delay: 0.1s; }
-        .project-card.animate-in:nth-child(2) { transition-delay: 0.2s; }
-        .project-card.animate-in:nth-child(3) { transition-delay: 0.3s; }
-
-        /* --- 8. Footer (Same as V2/V3) --- */
-        footer {
-            text-align: center;
-            padding: 3rem 0;
-            background-color: var(--nav-color);
-            margin-top: 3rem;
-        }
-        
-        /* --- 9. Responsive Design --- */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-            .hero h1 .static-text {
-                font-size: 2rem;
-            }
-            nav .container {
-                flex-direction: column;
-            }
-            nav .logo {
-                margin-bottom: 1rem;
-            }
-            nav ul li {
-                margin: 0 0.5rem;
-            }
-            #preloader {
-                font-size: 0.7rem; /* Adjusted pixel font for small screens */
-            }
-        }
     </style>
 </head>
 <body>
+    
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
 
-    <div id="preloader">
-        <div class="code-animation">
-            <span class="code-line line-1">Waking up...</span>
-            <span class="code-line line-2">Loading creative modules...</span>
-            <span class="code-line line-3">Initializing portfolio for:</span>
-            <span class="code-line line-4">User: Fuad Al Firoj</span>
-            <span class="code-line line-5">Status: Ready</span>
-            <span class="code-line line-6">Checking awesomeness level...</span>
-            <span class="code-line line-7">Level: 110%</span>
-            <span class="code-line line-8">All systems go!</span>
-            <span class="code-line line-9">.</span>
-            <span class="code-line line-10">.</span>
-            <span class="code-line line-11">Launching site...</span>
-            <span class="code-line line-12">Welcome! <span class="cursor"></span></span>
+    <div id="loader">
+        <div id="boot-sequence"></div>
+    </div>
+
+    <div class="terminal" id="terminal-view">
+        <div class="output" id="output"></div>
+        <div class="prompt-line">
+            <span class="prompt-symbol">FUAD@HOME:~$</span>
+            <span class="fake-input" id="fake-input"></span>
+            <span class="caret" id="caret"></span>
         </div>
+        <input type="text" id="command-line" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus>
     </div>
     
-    <div id="main-content">
+    <div class="win98-desktop hidden" id="gui-view">
+        
+        <div class="desktop-icon" id="icon-computer" data-window-id="computer">
+            <i class="fas fa-desktop"></i>
+            <span class="icon-label">My Computer</span>
+        </div>
+        
+        <div class="desktop-icon" id="icon-whoami" data-window-id="whoami">
+            <i class="fas fa-user-circle"></i>
+            <span class="icon-label">About Me.exe</span>
+        </div>
+        
+        <div class="desktop-icon" id="icon-socials" data-window-id="socials">
+            <i class="fas fa-address-book"></i>
+            <span class="icon-label">Contact Me</span>
+        </div>
 
-        <nav>
-            <div class="container">
-                <a href="#" class="logo">Fuad Al Firoj</a>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-        </nav>
+        <div class="desktop-icon" id="icon-projects" data-window-id="projects">
+            <i class="fas fa-folder-open"></i>
+            <span class="icon-label">Projects</span>
+        </div>
+        
+        <div class="desktop-icon" id="icon-readme" data-window-id="readme">
+            <i class="fas fa-file-alt"></i>
+            <span class="icon-label">README.txt</span>
+        </div>
+        
+        <div class="desktop-icon" id="icon-education" data-window-id="education">
+            <i class="fas fa-graduation-cap"></i>
+            <span class="icon-label">Education.txt</span>
+        </div>
 
-        <header class="hero">
-            <h1>
-                <span class="static-text">Hi, I am Fuad Al Firoj.</span>
-                I'm a <span class="typing"></span>
-            </h1>
-            <p class="subtitle">I build fun and fantastic applications for the web.</p>
-            <a href="#projects" class="cta-button">Check My Stuff!</a>
-        </header>
+        <div class="taskbar">
+            <button class="start-button" id="terminal-button">
+                <i class="fas fa-terminal" style="margin-right: 5px;"></i>
+                Terminal
+            </button>
+            <div class="taskbar-tabs" id="taskbar-tabs"></div>
+            <div id="taskbar-clock"></div>
+        </div>
+        
+        <div id="window-container"></div>
+        
+    </div>
 
-        <main class="container">
-            <section id="about" class="animate-in">
-                <h2 class="section-title">About Me</h2>
-                <p>
-                    I am a passionate developer with a love for creating clean, functional, and beautiful digital experiences. 
-                    I specialize in [Your Specialty] and am always
-                    eager to learn new technologies and solve challenging problems.
-                </P>
-            </section>
-
-            <section id="projects" class="animate-in">
-                <h2 class="section-title">My Projects</h2>
-                <div class="project-grid">
-                    <div class="project-card animate-in">
-                        <h3>Project Title 1</h3>
-                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
-                    </div>
-                    <div class="project-card animate-in">
-                        <h3>Project Title 2</h3>
-                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
-                    </div>
-                    <div class="project-card animate-in">
-                        <h3>Project Title 3</h3>
-                        <p>A brief description of your project. What problem does it solve? What technologies did you use?</p>
-                    </div>
-                </div>
-            </section>
-
-            <section id="contact" class="animate-in">
-                <h2 class="section-title">Get In Touch</h2>
-                <p style="text-align: center; font-size: 1.1rem;">
-                    I'm currently available for freelance work or new opportunities.
-                    <br>
-                    Feel free to email me at <a href="mailto:youremail@example.com">youremail@example.com</a>.
-                </p>
-            </section>
-        </main>
-
-        <footer>
-            <p>&copy; 2025 Fuad Al Firoj. All rights reserved.</p>
-        </footer>
-    
-    </div> <script>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- 1. Preloader Logic ---
-            const preloader = document.getElementById('preloader');
-            const mainContent = document.getElementById('main-content');
+            // --- GLOBAL SELECTORS ---
+            const loader = document.getElementById('loader');
+            const bootSequence = document.getElementById('boot-sequence');
+            const terminalView = document.getElementById('terminal-view');
+            const guiView = document.getElementById('gui-view');
+            const terminalButton = document.getElementById('terminal-button');
+            const cmdLine = document.getElementById('command-line');
+            const windowContainer = document.getElementById('window-container');
+            const taskbarTabs = document.getElementById('taskbar-tabs');
+            const taskbarClock = document.getElementById('taskbar-clock');
             
-            // Targets the last line
-            const lastLine = document.querySelector('.code-line.line-12');
+            // --- GLOBAL STATE ---
+            let global_ascii_art = ''; // Stores generated ASCII
+            // This is the path to your profile image for the GUI.
+            // It MUST be in the same folder as this index.html file.
+            let global_profile_img_src = 'profile.jpg'; 
+            
+            // --- CURSOR LOGIC ---
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorRing = document.querySelector('.cursor-ring');
+            let mouseX = 0, mouseY = 0;
+            let ringX = 0, ringY = 0;
 
-            lastLine.addEventListener('animationend', () => {
-                // Wait for cursor to blink a bit
-                setTimeout(() => {
-                    preloader.classList.add('hidden');
-                    mainContent.classList.add('visible');
-                }, 700); // Slightly longer pause
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                cursorDot.style.left = `${mouseX}px`;
+                cursorDot.style.top = `${mouseY}px`;
+            });
+            
+            function animateCursorRing() {
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+                cursorRing.style.left = `${ringX}px`;
+                cursorRing.style.top = `${ringY}px`;
+                requestAnimationFrame(animateCursorRing);
+            }
+            animateCursorRing();
+            
+            function addCursorEvents() {
+                document.querySelectorAll('a, button, .desktop-icon, .title-bar-button, .start-button, .resize-grip, .taskbar-tab, .file-manager-list li, .win-button').forEach(el => {
+                    el.removeEventListener('mouseenter', onCursorEnter);
+                    el.removeEventListener('mouseleave', onCursorLeave);
+                    el.addEventListener('mouseenter', onCursorEnter);
+                    el.addEventListener('mouseleave', onCursorLeave);
+                });
+            }
+            function onCursorEnter() {
+                cursorDot.classList.add('expand');
+                cursorRing.classList.add('expand');
+            }
+            function onCursorLeave() {
+                cursorDot.classList.remove('expand');
+                cursorRing.classList.remove('expand');
+            }
+            addCursorEvents(); // Initial call
+            
+            // --- TASKBAR CLOCK ---
+            function updateClock() {
+                const now = new Date();
+                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                taskbarClock.textContent = time;
+            }
+            updateClock();
+            setInterval(updateClock, 1000); // Update every second
+
+            // --- VIEW TOGGLE LOGIC ---
+            function switchToGui() {
+                terminalView.classList.add('hidden');
+                guiView.classList.remove('hidden');
+                addCursorEvents(); 
+            }
+            function switchToTerminal() {
+                guiView.classList.add('hidden');
+                terminalView.classList.remove('hidden');
+                cmdLine.focus();
+            }
+            terminalButton.addEventListener('click', switchToTerminal);
+            
+            // --- TERMINAL LOGIC ---
+            const output = document.getElementById('output');
+            const fakeInput = document.getElementById('fake-input');
+            const promptSymbol = document.querySelector('.prompt-symbol');
+            let commandHistory = [];
+            let historyIndex = 0;
+            const bootLines = [
+                "FUAD.AI System Kernel v3.0 initializing...",
+                "Checking system memory... OK.",
+                "[ok] Loading driver: python3_kernel.sys",
+                "[ok] Loading driver: ai_ml_core.drv",
+                "[ok] Loading driver: cloud_api.dll",
+                "[ok] Loading driver: php_fpm.sys",
+                "Initializing virtual network... Established.",
+                "Fetching user profile... Done.",
+                "SYSTEM READY.",
+                "",
+                "<span style='color: #8be9fd;'>&lt;script&gt;</span>",
+                "  <span style='color: #ff79c6;'>while</span>(<span style='color: #bd93f9;'>true</span>) {",
+                "    <span style='color: #50fa7b;'>develop</span>();",
+                "    <span style='color: #50fa7b;'>innovate</span>();",
+                "    <span style='color: #50fa7b;'>create</span>();",
+                "  }",
+                "<span style='color: #8be9fd;'>&lt;/script&gt;</span>",
+                "",
+                "**************************************************",
+                "Welcome. Type 'help' to see available commands.",
+                "**************************************************",
+                ""
+            ];
+            
+            // Boot Sequence
+            let bootLineIndex = 0;
+            function runBootSequence() {
+                if (bootLineIndex < bootLines.length) {
+                    const line = document.createElement('p');
+                    line.innerHTML = bootLines[bootLineIndex];
+                    line.style.animationDelay = `${bootLineIndex * 0.1}s`;
+                    bootSequence.appendChild(line);
+                    bootSequence.scrollTop = bootSequence.scrollHeight;
+                    bootLineIndex++;
+                    setTimeout(runBootSequence, Math.random() * 80 + 40);
+                } else {
+                    setTimeout(() => {
+                        loader.style.opacity = 0;
+                        loader.style.visibility = "hidden";
+                        cmdLine.focus();
+                        // *** NEW: Pre-load ASCII art from the .txt file ***
+                        loadAsciiFromTxt('profile-ascii.txt');
+                    }, 500);
+                }
+            }
+            runBootSequence();
+
+            // Terminal Event Listeners
+            terminalView.addEventListener('click', (e) => {
+                if (window.getSelection().type !== 'Range') {
+                   cmdLine.focus();
+                }
+            });
+            
+            cmdLine.addEventListener('input', () => {
+                fakeInput.textContent = cmdLine.value;
+            });
+            cmdLine.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const command = cmdLine.value.trim().toLowerCase();
+                    printToOutput(`<span class="prompt-symbol">${promptSymbol.textContent}</span> ${cmdLine.value}`);
+                    if (command) {
+                        commandHistory.push(command);
+                        historyIndex = commandHistory.length;
+                        parseCommand(command);
+                    }
+                    cmdLine.value = '';
+                    fakeInput.textContent = '';
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (historyIndex > 0) {
+                        historyIndex--;
+                        cmdLine.value = commandHistory[historyIndex];
+                        fakeInput.textContent = cmdLine.value;
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        cmdLine.value = commandHistory[historyIndex];
+                        fakeInput.textContent = cmdLine.value;
+                    } else {
+                        historyIndex = commandHistory.length;
+                        cmdLine.value = '';
+                        fakeInput.textContent = '';
+                    }
+                }
             });
 
-
-            // --- 2. Hero Typing Animation Logic ---
-            const typingElement = document.querySelector('.hero .typing');
-            
-            const words = [
-                "Web Developer.",
-                "Creative Coder.",
-                "Problem Solver.",
-                "UI/UX Fanatic."
-            ];
-
-            let wordIndex = 0;
-            let charIndex = 0;
-            let isDeleting = false;
-            let typingSpeed = 150;
-
-            function type() {
-                if (!mainContent.classList.contains('visible')) {
-                    setTimeout(type, 100); 
-                    return;
+            // Terminal Command Parser
+            function parseCommand(command) {
+                switch (command) {
+                    case 'help': printHelp(); break;
+                    case 'gui':
+                        printToOutput("Loading Graphical User Interface...");
+                        setTimeout(switchToGui, 500);
+                        break;
+                    case 'whoami': case 'bio': printBio(); break;
+                    case 'skills': case 'expertise': printSkills(); break;
+                    case 'education': printEducation(); break;
+                    case 'projects': printProjects(); break;
+                    case 'mission': printMission(); break;
+                    case 'vision': printVision(); break;
+                    case 'socials': case 'contact': case 'connect': printContact(); break;
+                    case 'ls': case 'dir': printLs(); break;
+                    case 'clear': case 'cls': output.innerHTML = ''; break;
+                    case 'reboot':
+                        output.innerHTML = '';
+                        switchToTerminal();
+                        loader.style.opacity = 1;
+                        loader.style.visibility = "visible";
+                        bootSequence.innerHTML = '';
+                        bootLineIndex = 0;
+                        runBootSequence();
+                        break;
+                    default:
+                        printToOutput(`'${command}': command not recognized. Type 'help' for assistance.`);
                 }
+                terminalView.scrollTop = terminalView.scrollHeight;
+            }
 
-                const currentWord = words[wordIndex];
+            // --- TERMINAL COMMAND OUTPUTS ---
+            
+            function printToOutput(html) {
+                const p = document.createElement('p');
+                p.innerHTML = html;
+                output.appendChild(p);
+                addCursorEvents();
+            }
+
+            function printHelp() {
+                printToOutput(`
+<pre>
+  FUAD.AI Command Help
+  
+  <b>gui</b>       - Switches to the graphical (Win98) portfolio page.
+  <b>whoami</b>    - Displays my professional bio and ASCII portrait.
+  <b>skills</b>    - Lists my technical expertise.
+  <b>education</b> - Shows my academic qualifications.
+  <b>projects</b>  - Shows my featured projects.
+  <b>mission</b>   - Displays my personal mission.
+  <b>vision</b>    - Displays my personal vision.
+  <b>socials</b>   - Shows all my social & contact links.
+  <b>ls</b>        - Lists all files in the directory.
+  <b>clear</b>     - Clears the terminal screen.
+  <b>reboot</b>    - Re-initializes the portfolio.
+</pre>`);
+            }
+            
+            function printLs() {
+                printToOutput(`
+<pre>
+  Volume F: \\ Users \\ Fuad
+  
+  My Computer.lnk
+  About Me.exe
+  Contact Me.lnk
+  Projects.lnk
+  README.txt
+  Education.txt
+  vision.txt
+</pre>
+                `);
+            }
+
+            function printBio() {
+                const art_to_display = global_ascii_art 
+                    ? `<pre class="ascii-art">${global_ascii_art}</pre>` 
+                    : `<pre class="ascii-art" style="color: #ff5555;">ERROR: 'profile-ascii.txt' not found.\nMake sure it's in the same folder as index.html.</pre>`;
                 
-                if (isDeleting) {
-                    typingElement.textContent = currentWord.substring(0, charIndex - 1);
-                    charIndex--;
-                    typingSpeed = 75;
-                } else {
-                    typingElement.textContent = currentWord.substring(0, charIndex + 1);
-                    charIndex++;
-                    typingSpeed = 150;
-                }
-
-                if (!isDeleting && charIndex === currentWord.length) {
-                    typingSpeed = 1500;
-                    isDeleting = true;
-                } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    wordIndex = (wordIndex + 1) % words.length;
-                }
-
-                setTimeout(type, typingSpeed);
+                printToOutput(`
+<h2>Bio</h2>
+${art_to_display}
+<p><b>Fuad Al Firoj</b></p>
+<p>Developer • AI Specialist • Solution Creator</p>
+<p>With a strong foundation in development and a passion for innovation, I generate transformative ideas and create impactful solutions.</p>
+                `);
             }
-            type();
-
-
-            // --- 3. Scroll Animation Logic ---
-            const animatedElements = document.querySelectorAll('.animate-in');
             
-            if (animatedElements.length > 0) {
-                const observer = new IntersectionObserver((entries) => {.
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                            observer.unobserve(entry.target); 
-                        }
+            function printEducation() {
+                printToOutput(`
+<h2>Qualifications</h2>
+<div class="project">
+  <p class="project-title">B.Sc. in Computer Science & Engineering</p>
+  <p>University of Bogura (UOB) | 2020 - 2024</p>
+</div>
+<div class="project">
+  <p class="project-title">Higher Secondary Certificate (HSC)</p>
+  <p>Bogura Cantonment Public School & College | 2017 - 2019</p>
+</div>`);
+            }
+
+            function printSkills() {
+                printToOutput(`
+<h2>Technical Expertise</h2>
+<pre>
+  <b>AI & ML</b>
+  ├─ Developing intelligent solutions using advanced
+  │  machine learning and neural networks.
+  <b>Development</b>
+  ├─ Building responsive, innovative, and scalable
+  │  web applications from the ground up.
+  <b>Cloud Solutions</b>
+  ├─ Implementing scalable cloud architectures and
+  │  serverless applications.
+  <b>System Architecture</b>
+  ├─ Designing robust and scalable system 
+  │  architectures for complex applications.
+</pre>`);
+            }
+            
+            function printProjects() { printToOutput(`<h2>Featured Projects</h2><div class="project"><p class="project-title">1. AI-Powered Solution (Python/ML)</p><p>A custom machine learning model to analyze and predict trends...</p><p class="tags">Tags: Python, TensorFlow, API</p></div><div class="project"><p class="project-title">2. E-Commerce Platform (PHP)</p><p>A full-stack online store built from scratch...</p><p class="tags">Tags: PHP, MySQL, JavaScript</p></div>`); }
+            function printMission() { printToOutput(`<h2>Mission</h2><p>To empower youth through innovative leadership initiatives...</p>`); }
+            function printVision() { printToOutput(`<h2>Vision</h2><p>To build a world where every young person has the opportunity to lead...</p>`); }
+
+            function printContact() {
+                printToOutput(`
+<h2>Connect With Me</h2>
+<pre>
+  <b>GitHub</b>     <a href="https://github.com" target="_blank">github.com/yourusername</a>
+  <b>LinkedIn</b>   <a href="https://linkedin.com" target="_blank">linkedin.com/in/yourusername</a>
+  <b>Facebook</b>   <a href="https://facebook.com" target="_blank">facebook.com/yourusername</a>
+  <b>...etc</b>
+</pre>`);
+            }
+            
+            // --- WIN98 GUI LOGIC ---
+            
+            // 1. Window Content
+            const windowData = {
+                'computer': {
+                    title: 'File Manager (F:)',
+                    content: `
+                        <h3>F: \\ Users \\ Fuad</h3>
+                        <ul class="file-manager-list">
+                            <li data-open-window="whoami" title="Double-click to open"><i class="fas fa-user-circle"></i>About Me.exe</li>
+                            <li data-open-window="projects" title="Double-click to open"><i class="fas fa-folder-open"></i>Projects.lnk</li>
+                            <li data-open-window="socials" title="Double-click to open"><i class="fas fa-address-book"></i>Contact Me.lnk</li>
+                            <li data-open-window="education" title="Double-click to open"><i class="fas fa-file-alt"></i>Education.txt</li>
+                            <li data-open-window="readme" title="Double-click to open"><i class="fas fa-file-alt"></i>README.txt</li>
+                            <li data-open-window="vision" title="Double-click to open"><i class="fas fa-file-alt"></i>vision.txt</li>
+                        </ul>
+                    `
+                },
+                'whoami': {
+                    title: 'About Me.exe',
+                    // This now directly uses your 'profile.jpg'
+                    content: `
+                        <img id="profile-img-gui" src="profile.jpg" alt="Fuad Al Firoj" onerror="this.style.display='none'">
+                        <h3>Fuad Al Firoj</h3>
+                        <p><b>Developer • AI Specialist • Solution Creator</b></p>
+                        <p>With a strong foundation in development and a passion for innovation, I generate transformative ideas and create impactful solutions.</p>
+                        <p>I'm a creative developer dedicated to crafting innovative solutions that bridge technology and real-world challenges.</p>
+                    `
+                },
+                'projects': {
+                    title: 'Projects',
+                    content: `
+                        <h3>Featured Projects</h3>
+                        <p><b>AI-Powered Solution (Python/ML)</b></p>
+                        <p>A custom machine learning model to analyze and predict trends from large datasets. Deployed as a scalable API for application integration.</p>
+                        <p><i>Tags: Python, TensorFlow, API</i></p>
+                        <hr>
+                        <p><b>E-Commerce Platform (PHP)</b></p>
+                        <p>A full-stack online store built from scratch with a secure payment gateway, admin dashboard for managing inventory, and a custom user auth system.</p>
+                        <p><i>Tags: PHP, MySQL, JavaScript, Stripe API</i></p>
+                    `
+                },
+                'education': {
+                    title: 'Education.txt',
+                    content: `
+                        <h3>Academic Qualifications</h3>
+                        <p><b>B.Sc. in Computer Science & Engineering</b></p>
+                        <ul>
+                            <li>University of Bogura (UOB)</li>
+                            <li>2020 - 2024</li>
+                        </ul>
+                        <p><b>Higher Secondary Certificate (HSC)</b></p>
+                        <ul>
+                            <li>Bogura Cantonment Public School & College</li>
+                            <li>2017 - 2019</li>
+                        </ul>
+                    `
+                },
+                'socials': {
+                    title: 'Contact Me',
+                    content: `
+                        <h3>Get In Touch</h3>
+                        <p>Let's build something amazing together. Links will open in a new tab.</p>
+                        <ul class="social-list">
+                            <li><a href="https://github.com" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+                            <li><a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                            <li><a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
+                            <li><a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+                            <li><a href="#" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                            <li><a href="mailto:test@example.com" target="_blank"><i class="fas fa-envelope"></i> Email</a></li>
+                        </ul>
+                    `
+                },
+                'readme': {
+                    title: 'README.txt',
+                    content: `
+                        <h3>Welcome to My System!</h3>
+                        <p><b>There are two modes:</b></p>
+                        <ul>
+                            <li><b>Terminal:</b> A command-line interface.</li>
+                            <li><b>GUI:</b> A retro desktop for a visual experience.</li>
+                        </ul>
+                        <p><b>Features:</b></p>
+                        <ul>
+                            <li>Double-click icons to open them.</li>
+                            <li>Open 'My Computer' to see a file manager.</li>
+                            <li>Type 'whoami' in terminal to see your profile art (loads from 'profile-ascii.txt').</li>
+                        </ul>
+                    `
+                },
+                'vision': {
+                    title: 'vision.txt',
+                    content: `
+                        <h3>My Vision</h3>
+                        <p>To build a world where every young person has the opportunity to lead, innovate, and create meaningful change.</p>
+                        <p>Envisioning a future where youth-led initiatives shape a more inclusive, sustainable, and empowered society.</p>
+                    `
+                }
+            };
+            
+            // 2. Window Z-Index Manager
+            let highestZ = 100;
+
+            // 3. Create Window Function
+            function createWindow(windowId) {
+                const windowElId = `window-${windowId}`;
+                const tabElId = `tab-${windowId}`;
+                
+                const existingWindow = document.getElementById(windowElId);
+                if (existingWindow) {
+                    if (existingWindow.classList.contains('minimized')) {
+                        restoreWindow(existingWindow, document.getElementById(tabElId));
+                    }
+                    existingWindow.style.zIndex = ++highestZ;
+                    return existingWindow; // Return existing window
+                }
+                
+                const data = windowData[windowId];
+                if (!data) return;
+                
+                const newWindow = document.createElement('div');
+                newWindow.className = 'window';
+                newWindow.id = windowElId;
+                newWindow.style.zIndex = ++highestZ;
+                newWindow.style.top = `${Math.random() * 50 + 40}px`;
+                newWindow.style.left = `${Math.random() * 150 + 150}px`;
+                
+                newWindow.innerHTML = `
+                    <div class="window-title-bar">
+                        <span class="title-bar-text">${data.title}</span>
+                        <div class="title-bar-buttons">
+                            <button class="title-bar-button minimize-button" aria-label="Minimize">_</button>
+                            <button class="title-bar-button maximize-button" aria-label="Maximize">◻</button>
+                            <button class="title-bar-button close-button" aria-label="Close">X</button>
+                        </div>
+                    </div>
+                    <div class="window-body win-content">
+                        ${data.content}
+                    </div>
+                    <div class="resize-grip"></div>
+                `;
+                
+                windowContainer.appendChild(newWindow);
+                const taskbarTab = createTaskbarTab(newWindow, data.title, tabElId);
+                
+                // Add Functionality
+                dragElement(newWindow);
+                resizeElement(newWindow);
+                
+                newWindow.querySelector('.close-button').addEventListener('click', () => {
+                    newWindow.remove();
+                    taskbarTab.remove();
+                });
+                
+                newWindow.querySelector('.minimize-button').addEventListener('click', () => {
+                    minimizeWindow(newWindow, taskbarTab);
+                });
+                
+                newWindow.querySelector('.maximize-button').addEventListener('click', (e) => {
+                    maximizeWindow(newWindow, e.currentTarget);
+                });
+                
+                newWindow.addEventListener('mousedown', () => {
+                    newWindow.style.zIndex = ++highestZ;
+                    document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
+                    taskbarTab.classList.add('active');
+                });
+                
+                // Add File Manager functionality
+                if (windowId === 'computer') {
+                    newWindow.querySelectorAll('.file-manager-list li').forEach(li => {
+                        li.addEventListener('dblclick', (e) => {
+                            const openWindowId = e.currentTarget.dataset.openWindow;
+                            createWindow(openWindowId);
+                        });
                     });
-                }, {
-                    threshold: 0.1 
-                });
-
-                animatedElements.forEach(el => {
-                    observer.observe(el);
-                });
+                }
+                
+                addCursorEvents();
+                return newWindow; // Return new window
             }
             
+            // 4. Icon Click Listeners
+            document.querySelectorAll('.desktop-icon').forEach(icon => {
+                icon.addEventListener('dblclick', () => {
+                    const windowId = icon.getAttribute('data-window-id');
+                    createWindow(windowId);
+                });
+                icon.addEventListener('click', () => {
+                    document.querySelectorAll('.desktop-icon.selected').forEach(selected => selected.classList.remove('selected'));
+                    icon.classList.add('selected');
+                });
+            });
+            guiView.addEventListener('click', (e) => {
+                if (e.target === guiView) {
+                     document.querySelectorAll('.desktop-icon.selected').forEach(selected => selected.classList.remove('selected'));
+                }
+            });
+
+            // 5. Window Functions (Minimize, Maximize, etc.)
+            function createTaskbarTab(windowEl, title, tabElId) {
+                const tab = document.createElement('button');
+                tab.className = 'taskbar-tab active';
+                tab.id = tabElId;
+                tab.textContent = title;
+                
+                document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
+                taskbarTabs.appendChild(tab);
+                
+                tab.addEventListener('click', () => {
+                    if (windowEl.classList.contains('minimized')) {
+                        restoreWindow(windowEl, tab);
+                    } else {
+                        if (windowEl.style.zIndex == highestZ - 1) { // Check if it's already active
+                            minimizeWindow(windowEl, tab);
+                        } else {
+                            windowEl.style.zIndex = ++highestZ;
+                            document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
+                            tab.classList.add('active');
+                        }
+                    }
+                });
+                addCursorEvents();
+                return tab;
+            }
+            
+            function minimizeWindow(windowEl, tabEl) {
+                windowEl.classList.add('minimized');
+                tabEl.classList.remove('active');
+            }
+            
+            function restoreWindow(windowEl, tabEl) {
+                windowEl.classList.remove('minimized');
+                document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
+                tabEl.classList.add('active');
+                windowEl.style.zIndex = ++highestZ;
+            }
+            
+            function maximizeWindow(windowEl, maxButton) {
+                // *** THIS IS THE MAXIMIZE FIX ***
+                if (windowEl.classList.contains('maximized')) {
+                    // Restore
+                    windowEl.classList.remove('maximized');
+                    windowEl.style.top = windowEl.dataset.oldTop;
+                    windowEl.style.left = windowEl.dataset.oldLeft;
+                    windowEl.style.width = windowEl.dataset.oldWidth;
+                    windowEl.style.height = windowEl.dataset.oldHeight;
+                    maxButton.textContent = '◻';
+                } else {
+                    // Maximize
+                    // Store old position
+                    windowEl.dataset.oldTop = windowEl.style.top;
+                    windowEl.dataset.oldLeft = windowEl.style.left;
+                    // *** BUG FIX: Store *current* offsetWidth/Height ***
+                    windowEl.dataset.oldWidth = `${windowEl.offsetWidth}px`;
+                    windowEl.dataset.oldHeight = `${windowEl.offsetHeight}px`;
+                    
+                    windowEl.classList.add('maximized');
+                    maxButton.textContent = '❐'; // Restore icon
+                }
+            }
+            
+            // 6. Drag & Resize Functions
+            function dragElement(elmnt) {
+                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                
+                const titleBar = elmnt.querySelector(".window-title-bar");
+                const dragHandle = titleBar || elmnt;
+                
+                dragHandle.onmousedown = dragMouseDown;
+
+                function dragMouseDown(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    elmnt.style.zIndex = ++highestZ;
+                    
+                    if (elmnt.id.startsWith('window-')) {
+                         document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
+                         const tabId = `tab-${elmnt.id.split('-')[1]}`;
+                         const tab = document.getElementById(tabId);
+                         if (tab) tab.classList.add('active');
+                    }
+                    
+                    document.onmouseup = closeDragElement;
+                    document.onmousemove = elementDrag;
+                }
+
+                function elementDrag(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    
+                    if (elmnt.classList.contains('maximized')) return;
+                    
+                    pos1 = pos3 - e.clientX;
+                    pos2 = pos4 - e.clientY;
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    
+                    let newTop = elmnt.offsetTop - pos2;
+                    let newLeft = elmnt.offsetLeft - pos1;
+                    
+                    const desktop = guiView;
+                    if (newTop < 0) newTop = 0;
+                    if (newLeft < 0) newLeft = 0;
+                    if (newTop + elmnt.offsetHeight > desktop.clientHeight) newTop = desktop.clientHeight - elmnt.offsetHeight;
+                    if (newLeft + elmnt.offsetWidth > desktop.clientWidth) newLeft = desktop.clientWidth - elmnt.offsetWidth;
+                    
+                    elmnt.style.top = newTop + "px";
+                    elmnt.style.left = newLeft + "px";
+                }
+
+                function closeDragElement() {
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                }
+            }
+            
+            function resizeElement(elmnt) {
+                const resizeGrip = elmnt.querySelector('.resize-grip');
+                if (!resizeGrip) return; 
+                
+                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+                resizeGrip.onmousedown = resizeMouseDown;
+                
+                function resizeMouseDown(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    
+                    document.onmouseup = closeResizeElement;
+                    document.onmousemove = elementResize;
+                }
+                
+                function elementResize(e) {
+                    e = e || window.event;
+                    e.preventDefault();
+                    
+                    if (elmnt.classList.contains('maximized')) return;
+                    
+                    pos1 = pos3 - e.clientX;
+                    pos2 = pos4 - e.clientY;
+                    pos3 = e.clientX;
+                    pos4 = e.clientY;
+                    
+                    let newWidth = elmnt.offsetWidth - pos1;
+                    let newHeight = elmnt.offsetHeight - pos2;
+                    
+                    const minWidth = parseInt(elmnt.style.minWidth) || 300;
+                    const minHeight = parseInt(elmnt.style.minHeight) || 200;
+
+                    if (newWidth > minWidth) elmnt.style.width = newWidth + "px";
+                    if (newHeight > minHeight) elmnt.style.height = newHeight + "px";
+                }
+                
+                function closeResizeElement() {
+                    document.onmouseup = null;
+                    document.onmousemove = null;
+                }
+            }
+            
+            // 7. Make existing icons draggable
+            document.querySelectorAll('.desktop-icon').forEach(dragElement);
+            
+            // 8. ASCII Art Loader
+            // This function fetches the .txt file and stores it in the global variable
+            function loadAsciiFromTxt(url) {
+                fetch(url)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then(text => {
+                        global_ascii_art = text; // Save the loaded art
+                    })
+                    .catch(error => {
+                        console.error('Failed to fetch ASCII art:', error);
+                        global_ascii_art = `ERROR: Could not load '${url}'.\nMake sure the file is in the same folder as index.html.`;
+                    });
+            }
+
         });
     </script>
-
 </body>
 </html>
