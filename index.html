@@ -149,6 +149,14 @@
             margin-top: 10px;
             margin-bottom: 10px;
         }
+        /* New class for clickable files in 'ls' */
+        .terminal-file {
+            color: var(--link-color);
+            text-decoration: underline;
+        }
+        .terminal-file:hover {
+            color: var(--cmd-color);
+        }
         
         .prompt-line { display: flex; margin-top: 5px; z-index: 2; position: relative; }
         .prompt-symbol { margin-right: 10px; color: var(--header-color); }
@@ -508,6 +516,7 @@
             
             // --- GLOBAL STATE ---
             let global_ascii_art = ''; // Stores generated ASCII
+            // *** IMPORTANT ***
             // This is the path to your profile image for the GUI.
             // It MUST be in the same folder as this index.html file.
             let global_profile_img_src = 'profile.jpg'; 
@@ -535,7 +544,7 @@
             animateCursorRing();
             
             function addCursorEvents() {
-                document.querySelectorAll('a, button, .desktop-icon, .title-bar-button, .start-button, .resize-grip, .taskbar-tab, .file-manager-list li, .win-button').forEach(el => {
+                document.querySelectorAll('a, button, .desktop-icon, .title-bar-button, .start-button, .resize-grip, .taskbar-tab, .file-manager-list li, .win-button, .terminal-file').forEach(el => {
                     el.removeEventListener('mouseenter', onCursorEnter);
                     el.removeEventListener('mouseleave', onCursorLeave);
                     el.addEventListener('mouseenter', onCursorEnter);
@@ -590,19 +599,7 @@
                 "Initializing virtual network... Established.",
                 "Fetching user profile... Done.",
                 "SYSTEM READY.",
-                "",
-                "<span style='color: #8be9fd;'>&lt;script&gt;</span>",
-                "  <span style='color: #ff79c6;'>while</span>(<span style='color: #bd93f9;'>true</span>) {",
-                "    <span style='color: #50fa7b;'>develop</span>();",
-                "    <span style='color: #50fa7b;'>innovate</span>();",
-                "    <span style='color: #50fa7b;'>create</span>();",
-                "  }",
-                "<span style='color: #8be9fd;'>&lt;/script&gt;</span>",
-                "",
-                "**************************************************",
-                "Welcome. Type 'help' to see available commands.",
-                "**************************************************",
-                ""
+                "" // Removed welcome message from here
             ];
             
             // Boot Sequence
@@ -620,8 +617,14 @@
                     setTimeout(() => {
                         loader.style.opacity = 0;
                         loader.style.visibility = "hidden";
+                        
+                        // *** FIX: Print welcome message to TERMINAL, not loader ***
+                        printToOutput("**************************************************");
+                        printToOutput("Welcome. Type 'help' to see available commands.");
+                        printToOutput("**************************************************");
+                        
                         cmdLine.focus();
-                        // *** NEW: Pre-load ASCII art from the .txt file ***
+                        // Pre-load ASCII art from the .txt file
                         loadAsciiFromTxt('profile-ascii.txt');
                     }, 500);
                 }
@@ -630,7 +633,15 @@
 
             // Terminal Event Listeners
             terminalView.addEventListener('click', (e) => {
-                if (window.getSelection().type !== 'Range') {
+                // *** NEW: Event delegation for clickable files ***
+                if (e.target.classList.contains('terminal-file')) {
+                    const command = e.target.dataset.command;
+                    // Simulate typing the command
+                    printToOutput(`<span class="prompt-symbol">${promptSymbol.textContent}</span> ${command}`); 
+                    parseCommand(command);
+                    terminalView.scrollTop = terminalView.scrollHeight; // Scroll down
+                }
+                else if (window.getSelection().type !== 'Range') {
                    cmdLine.focus();
                 }
             });
@@ -704,12 +715,11 @@
             }
 
             // --- TERMINAL COMMAND OUTPUTS ---
-            
             function printToOutput(html) {
                 const p = document.createElement('p');
                 p.innerHTML = html;
                 output.appendChild(p);
-                addCursorEvents();
+                addCursorEvents(); // Re-apply events for new elements
             }
 
             function printHelp() {
@@ -717,15 +727,15 @@
 <pre>
   FUAD.AI Command Help
   
-  <b>gui</b>       - Switches to the graphical (Win98) portfolio page.
-  <b>whoami</b>    - Displays my professional bio and ASCII portrait.
+  <b>whoami</b>    - Displays my professional bio.
+  <b>gui</b>       - Switches to the graphical interface.
   <b>skills</b>    - Lists my technical expertise.
   <b>education</b> - Shows my academic qualifications.
   <b>projects</b>  - Shows my featured projects.
   <b>mission</b>   - Displays my personal mission.
   <b>vision</b>    - Displays my personal vision.
   <b>socials</b>   - Shows all my social & contact links.
-  <b>ls</b>        - Lists all files in the directory.
+  <b>ls</b>        - Lists all files in the directory (clickable).
   <b>clear</b>     - Clears the terminal screen.
   <b>reboot</b>    - Re-initializes the portfolio.
 </pre>`);
@@ -736,13 +746,13 @@
 <pre>
   Volume F: \\ Users \\ Fuad
   
-  My Computer.lnk
-  About Me.exe
-  Contact Me.lnk
-  Projects.lnk
-  README.txt
-  Education.txt
-  vision.txt
+  <span class="terminal-file" data-command="gui" title="Run 'gui'">My Computer.lnk</span>
+  <span class="terminal-file" data-command="whoami" title="Run 'whoami'">About Me.exe</span>
+  <span class="terminal-file" data-command="socials" title="Run 'socials'">Contact Me.lnk</span>
+  <span class="terminal-file" data-command="projects" title="Run 'projects'">Projects.lnk</span>
+  <span class="terminal-file" data-command="readme" title="Run 'readme'">README.txt</span>
+  <span class="terminal-file" data-command="education" title="Run 'education'">Education.txt</span>
+  <span class="terminal-file" data-command="vision" title="Run 'vision'">vision.txt</span>
 </pre>
                 `);
             }
@@ -1192,7 +1202,7 @@ ${art_to_display}
                     })
                     .catch(error => {
                         console.error('Failed to fetch ASCII art:', error);
-                        global_ascii_art = `ERROR: Could not load '${url}'.\nMake sure the file is in the same folder as index.html.`;
+                        // global_ascii_art remains empty, so printBio() will show an error
                     });
             }
 
