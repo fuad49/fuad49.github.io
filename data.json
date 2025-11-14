@@ -1,0 +1,153 @@
+{
+  "apps": [
+    {
+      "id": "whoami",
+      "command": "whoami",
+      "aliases": ["bio"],
+      "icon": "fas fa-user-circle",
+      "label": "About Me.exe",
+      "windowTitle": "About Me.exe",
+      "content": {
+        "type": "profile",
+        "image": "profile.jpg",
+        "title": "Fuad Al Firoj",
+        "subtitle": "Developer • AI Specialist • CTO • Game Builder",
+        "body": "I’m Fuad Al Firoj — a developer, creative problem solver, and AI enthusiast. As the Technology & Digital Lead (CTO) at Youth Buildup Community (YBC) and Co-founder & CEO at Shongjojon, I build tech solutions, real-world projects, and AI-powered tools. I create games, SaaS systems, machine learning applications, and innovative digital products."
+      }
+    },
+    {
+      "id": "computer",
+      "command": null,
+      "aliases": [],
+      "icon": "fas fa-desktop",
+      "label": "My Computer",
+      "windowTitle": "File Manager (F:)",
+      "content": {
+        "type": "fileManager"
+      }
+    },
+    {
+      "id": "projects",
+      "command": "projects",
+      "aliases": [],
+      "icon": "fas fa-folder-open",
+      "label": "Projects",
+      "windowTitle": "Projects",
+      "content": {
+        "type": "html",
+        "html": "<h3>Featured Projects</h3><p><b>AI-Powered Solution (Python/ML)</b></p><p>A custom machine learning model to analyze and predict trends from large datasets. Deployed as a scalable API for application integration.</p><p><i>Tags: Python, TensorFlow, API</i></p><hr><p><b>E-Commerce Platform (PHP)</b></p><p>A full-stack online store built from scratch with a secure payment gateway, admin dashboard for managing inventory, and a custom user auth system.</p><p><i>Tags: PHP, MySQL, JavaScript, Stripe API</i></p>"
+      }
+    },
+    {
+      "id": "gaming",
+      "command": "gaming",
+      "aliases": ["valorant", "ign"],
+      "icon": "fas fa-gamepad",
+      "label": "Gaming.exe",
+      "windowTitle": "Gaming History",
+      "content": {
+        "type": "html",
+        "html": "<h3>Gaming History</h3><h4>Valorant</h4><ul><li><b>In-Game Name (IGN):</b> YourNameHere #TAG</li><li><b>Rank:</b> PlaceholderRank</li><li><b>Main Agent:</b> PlaceholderAgent</li><li><b>Server:</b> Asia (IN)</li></ul><hr><h4>Other Games</h4><ul><li>Placeholder Game 1</li><li>Placeholder Game 2</li></ul>"
+      }
+    },
+    {
+      "id": "tictactoe",
+      "command": "tictactoe",
+      "aliases": ["ttt"],
+      "icon": "fas fa-table-cells",
+      "label": "TicTacToe.exe",
+      "windowTitle": "Tic-Tac-Toe",
+      "content": {
+        "type": "game-tictactoe"
+      }
+    },
+    {
+      "id": "minesweeper",
+      "command": "minesweeper",
+      "aliases": ["ms"],
+      "icon": "fas fa-bomb",
+      "label": "Minesweeper.exe",
+      "windowTitle": "Minesweeper",
+      "content": {
+        "type": "game-minesweeper"
+      }
+    },
+    {
+      "id": "education",
+      "command": "education",
+      "aliases": [],
+      "icon": "fas fa-graduation-cap",
+      "label": "Education.txt",
+      "windowTitle": "Education.txt",
+      "content": {
+        "type": "html",
+        "html": "<h3>Academic Qualifications</h3><p><b>Higher Secondary Certificate (HSC)</b></p><ul><li>Bogura Govt. College</li><li>Completed: 2025</li><li>GPA: 5.00</li></ul><p><b>Secondary School Certificate (SSC)</b></p><ul><li>Police Lines School and College, Bogura</li><li>Completed: 2023</li><li>GPA: 5.00</li></ul>"
+      }
+    },
+    {
+      "id": "socials",
+      "command": "socials",
+      "aliases": ["contact", "connect"],
+      "icon": "fas fa-address-book",
+      "label": "Contact Me",
+      "windowTitle": "Contact Me",
+      "content": {
+        "type": "socials",
+        "links": [
+          { "name": "GitHub", "url": "https://github.com/fuad49", "icon": "fab fa-github" },
+          { "name": "LinkedIn", "url": "https://www.linkedin.com/in/fuadalfiroj/", "icon": "fab fa-linkedin" },
+          { "name": "Facebook", "url": "https://www.facebook.com/fuad.al.firoj.2024", "icon": "fab fa-facebook" },
+          { "name": "Instagram", "url": "https://www.instagram.com/_fuad_04_/", "icon": "fab fa-instagram" },
+          { "name": "WhatsApp", "url": "#", "icon": "fab fa-whatsapp" },
+          { "name": "Email", "url": "mailto:fuadalfiroj2004@gmail.com", "icon": "fas fa-envelope" }
+        ]
+      }
+    },
+    {
+      "id": "readme",
+      "command": "readme",
+      "aliases": [],
+      "icon": "fas fa-file-alt",
+      "label": "README.txt",
+      "windowTitle": "README.txt",
+      "content": {
+        "type": "html",
+        "html": "<h3>Welcome to My System!</h3><p><b>There are two modes:</b></p><ul><li><b>Terminal:</b> A command-line interface.</li><li><b>GUI:</b> A retro desktop for a visual experience.</li></ul><p><b>Features:</b></p><ul><li>Double-click icons to open them.</li><li>Open 'My Computer' to see a file manager.</li><li>Type 'whoami' in terminal to see your profile art (loads from 'profile-ascii.txt').</li></ul>"
+      }
+    },
+    {
+      "id": "vision",
+      "command": "vision",
+      "aliases": [],
+      "icon": "fas fa-file-alt",
+      "label": "vision.txt",
+      "windowTitle": "vision.txt",
+      "content": {
+        "type": "html",
+        "html": "<h3>My Vision</h3><p>To build a world where every young person has the opportunity to lead, innovate, and create meaningful change.</p><p>Envisioning a future where youth-led initiatives shape a more inclusive, sustainable, and empowered society.</p>"
+      }
+    }
+  ],
+  "terminalCommands": [
+    {
+      "command": "help",
+      "description": "Switches to the graphical (Win98) portfolio page."
+    },
+    {
+      "command": "gui",
+      "description": "Switches to the graphical (Win98) portfolio page."
+    },
+    {
+      "command": "ls",
+      "description": "Lists all files in the directory."
+    },
+    {
+      "command": "clear",
+      "description": "Clears the terminal screen."
+    },
+    {
+      "command": "reboot",
+      "description": "Re-initializes the portfolio."
+    }
+  ]
+}
