@@ -6,6 +6,10 @@
     <title>Fuad Al Firoj - System Interface</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" 
+href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='70%25' dominant-baseline='middle' text-anchor='middle' font-size='90' font-weight='700' font-family='Arial, sans-serif' fill='%2334d399'%3EF%3C/text%3E%3C/svg%3E" 
+/>
+
     
     <style>
         /* --- GLOBAL & CURSOR --- */
@@ -190,6 +194,12 @@
             font-size: 14px;
         }
         
+        #desktop-icon-container { /* New container for dynamic icons */
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
         .desktop-icon {
             width: 90px;
             height: 90px;
@@ -219,14 +229,6 @@
             background: #000080;
             border: 1px dotted #fff;
         }
-        
-        /* Icon Positions */
-        #icon-computer { top: 20px; left: 20px; }
-        #icon-whoami { top: 120px; left: 20px; } /* "About Me" Icon */
-        #icon-socials { top: 220px; left: 20px; }
-        #icon-projects { top: 320px; left: 20px; }
-        #icon-readme { top: 20px; left: 120px; }
-        #icon-education { top: 120px; left: 120px; }
 
         .taskbar {
             position: absolute;
@@ -434,6 +436,194 @@
             text-align: center;
         }
         
+        .win-button {
+            background: var(--ui-gray);
+            border: 2px solid var(--ui-border-light);
+            border-right-color: var(--ui-border-dark);
+            border-bottom-color: var(--ui-border-dark);
+            border-style: outset;
+            padding: 5px 15px;
+            margin: 10px 0;
+            font-weight: bold;
+            align-self: center;
+        }
+        .win-button:active { border-style: inset; }
+        
+        /* =================================
+           = Tic-Tac-Toe Game Styles
+           ================================= */
+        
+        .ttt-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        .ttt-status {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            min-height: 1.2em;
+        }
+        .ttt-board {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 5px;
+            background: #000;
+            border: 2px solid var(--ui-border-dark);
+        }
+        .ttt-cell {
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+        .ttt-cell:hover {
+            background: #f0f0f0;
+        }
+        .ttt-cell.x { color: #ff0000; }
+        .ttt-cell.o { color: #0000ff; }
+        .ttt-cell.winner { /* Winning line highlight */
+            background-color: #90ee90;
+        }
+        
+        /* =================================
+           = NEW: Minesweeper Game Styles
+           ================================= */
+           
+        .ms-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+        .ms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 274px; /* 9 * 30 + 4 */
+            background: var(--ui-gray);
+            border: 2px solid var(--ui-border-dark);
+            border-right-color: var(--ui-border-light);
+            border-bottom-color: var(--ui-border-light);
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+        .ms-stats {
+            background: #000;
+            color: #ff0000;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 24px;
+            padding: 2px 5px;
+            border: 2px solid var(--ui-border-dark);
+            border-style: inset;
+        }
+        .ms-reset-btn {
+            width: 30px;
+            height: 30px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--ui-gray);
+            border: 2px solid var(--ui-border-light);
+            border-right-color: var(--ui-border-dark);
+            border-bottom-color: var(--ui-border-dark);
+            border-style: outset;
+        }
+        .ms-reset-btn:active { border-style: inset; }
+        
+        .ms-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 30px);
+            grid-template-rows: repeat(9, 30px);
+            border: 2px solid var(--ui-border-dark);
+            border-right-color: var(--ui-border-light);
+            border-bottom-color: var(--ui-border-light);
+        }
+        .ms-cell {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            user-select: none;
+        }
+        .ms-cell.hidden {
+            background: var(--ui-gray);
+            border: 2px solid var(--ui-border-light);
+            border-right-color: var(--ui-border-dark);
+            border-bottom-color: var(--ui-border-dark);
+            border-style: outset;
+        }
+        .ms-cell.revealed {
+            border: 1px solid #999;
+        }
+        .ms-cell.mine {
+            background: red;
+        }
+        .ms-cell.flag i { color: red; }
+        .ms-cell[data-mines="1"] { color: #0000ff; }
+        .ms-cell[data-mines="2"] { color: #008000; }
+        .ms-cell[data-mines="3"] { color: #ff0000; }
+        .ms-cell[data-mines="4"] { color: #000080; }
+        .ms-cell[data-mines="5"] { color: #800000; }
+        .ms-cell[data-mines="6"] { color: #008080; }
+        .ms-cell[data-mines="7"] { color: #000000; }
+        .ms-cell[data-mines="8"] { color: #808080; }
+        
+        
+        /* =================================
+           = Mobile Responsive Styles
+           ================================= */
+        
+        @media (max-width: 768px) {
+            /* Hide desktop and cursor */
+            .win98-desktop,
+            .cursor-dot,
+            .cursor-ring {
+                display: none !important;
+            }
+            
+            /* Make terminal full screen */
+            .terminal {
+                font-size: 0.9rem;
+                padding: 10px;
+                height: 100%;
+                width: 100%;
+            }
+            
+            #loader {
+                padding: 10px;
+            }
+            
+            #boot-sequence p {
+                font-size: 0.8rem;
+            }
+            
+            .output .ascii-art {
+                font-size: 0.4rem; /* Shrink art on mobile */
+                line-height: 0.7;
+            }
+            
+            /* Re-enable system cursor for mobile */
+            * {
+                cursor: auto;
+            }
+        }
+        
     </style>
 </head>
 <body>
@@ -457,35 +647,7 @@
     
     <div class="win98-desktop hidden" id="gui-view">
         
-        <div class="desktop-icon" id="icon-computer" data-window-id="computer">
-            <i class="fas fa-desktop"></i>
-            <span class="icon-label">My Computer</span>
-        </div>
-        
-        <div class="desktop-icon" id="icon-whoami" data-window-id="whoami">
-            <i class="fas fa-user-circle"></i>
-            <span class="icon-label">About Me.exe</span>
-        </div>
-        
-        <div class="desktop-icon" id="icon-socials" data-window-id="socials">
-            <i class="fas fa-address-book"></i>
-            <span class="icon-label">Contact Me</span>
-        </div>
-
-        <div class="desktop-icon" id="icon-projects" data-window-id="projects">
-            <i class="fas fa-folder-open"></i>
-            <span class="icon-label">Projects</span>
-        </div>
-        
-        <div class="desktop-icon" id="icon-readme" data-window-id="readme">
-            <i class="fas fa-file-alt"></i>
-            <span class="icon-label">README.txt</span>
-        </div>
-        
-        <div class="desktop-icon" id="icon-education" data-window-id="education">
-            <i class="fas fa-graduation-cap"></i>
-            <span class="icon-label">Education.txt</span>
-        </div>
+        <div id="desktop-icon-container"></div>
 
         <div class="taskbar">
             <button class="start-button" id="terminal-button">
@@ -500,713 +662,6 @@
         
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // --- GLOBAL SELECTORS ---
-            const loader = document.getElementById('loader');
-            const bootSequence = document.getElementById('boot-sequence');
-            const terminalView = document.getElementById('terminal-view');
-            const guiView = document.getElementById('gui-view');
-            const terminalButton = document.getElementById('terminal-button');
-            const cmdLine = document.getElementById('command-line');
-            const windowContainer = document.getElementById('window-container');
-            const taskbarTabs = document.getElementById('taskbar-tabs');
-            const taskbarClock = document.getElementById('taskbar-clock');
-            
-            // --- GLOBAL STATE ---
-            let global_ascii_art = ''; // Stores generated ASCII
-            // *** IMPORTANT ***
-            // This is the path to your profile image for the GUI.
-            // It MUST be in the same folder as this index.html file.
-            let global_profile_img_src = 'profile.jpg'; 
-            
-            // --- CURSOR LOGIC ---
-            const cursorDot = document.querySelector('.cursor-dot');
-            const cursorRing = document.querySelector('.cursor-ring');
-            let mouseX = 0, mouseY = 0;
-            let ringX = 0, ringY = 0;
-
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                cursorDot.style.left = `${mouseX}px`;
-                cursorDot.style.top = `${mouseY}px`;
-            });
-            
-            function animateCursorRing() {
-                ringX += (mouseX - ringX) * 0.15;
-                ringY += (mouseY - ringY) * 0.15;
-                cursorRing.style.left = `${ringX}px`;
-                cursorRing.style.top = `${ringY}px`;
-                requestAnimationFrame(animateCursorRing);
-            }
-            animateCursorRing();
-            
-            function addCursorEvents() {
-                document.querySelectorAll('a, button, .desktop-icon, .title-bar-button, .start-button, .resize-grip, .taskbar-tab, .file-manager-list li, .win-button, .terminal-file').forEach(el => {
-                    el.removeEventListener('mouseenter', onCursorEnter);
-                    el.removeEventListener('mouseleave', onCursorLeave);
-                    el.addEventListener('mouseenter', onCursorEnter);
-                    el.addEventListener('mouseleave', onCursorLeave);
-                });
-            }
-            function onCursorEnter() {
-                cursorDot.classList.add('expand');
-                cursorRing.classList.add('expand');
-            }
-            function onCursorLeave() {
-                cursorDot.classList.remove('expand');
-                cursorRing.classList.remove('expand');
-            }
-            addCursorEvents(); // Initial call
-            
-            // --- TASKBAR CLOCK ---
-            function updateClock() {
-                const now = new Date();
-                const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                taskbarClock.textContent = time;
-            }
-            updateClock();
-            setInterval(updateClock, 1000); // Update every second
-
-            // --- VIEW TOGGLE LOGIC ---
-            function switchToGui() {
-                terminalView.classList.add('hidden');
-                guiView.classList.remove('hidden');
-                addCursorEvents(); 
-            }
-            function switchToTerminal() {
-                guiView.classList.add('hidden');
-                terminalView.classList.remove('hidden');
-                cmdLine.focus();
-            }
-            terminalButton.addEventListener('click', switchToTerminal);
-            
-            // --- TERMINAL LOGIC ---
-            const output = document.getElementById('output');
-            const fakeInput = document.getElementById('fake-input');
-            const promptSymbol = document.querySelector('.prompt-symbol');
-            let commandHistory = [];
-            let historyIndex = 0;
-            const bootLines = [
-                "FUAD.AI System Kernel v3.0 initializing...",
-                "Checking system memory... OK.",
-                "[ok] Loading driver: python3_kernel.sys",
-                "[ok] Loading driver: ai_ml_core.drv",
-                "[ok] Loading driver: cloud_api.dll",
-                "[ok] Loading driver: php_fpm.sys",
-                "Initializing virtual network... Established.",
-                "Fetching user profile... Done.",
-                "SYSTEM READY.",
-                "" // Removed welcome message from here
-            ];
-            
-            // Boot Sequence
-            let bootLineIndex = 0;
-            function runBootSequence() {
-                if (bootLineIndex < bootLines.length) {
-                    const line = document.createElement('p');
-                    line.innerHTML = bootLines[bootLineIndex];
-                    line.style.animationDelay = `${bootLineIndex * 0.1}s`;
-                    bootSequence.appendChild(line);
-                    bootSequence.scrollTop = bootSequence.scrollHeight;
-                    bootLineIndex++;
-                    setTimeout(runBootSequence, Math.random() * 80 + 40);
-                } else {
-                    setTimeout(() => {
-                        loader.style.opacity = 0;
-                        loader.style.visibility = "hidden";
-                        
-                        // *** FIX: Print welcome message to TERMINAL, not loader ***
-                        printToOutput("**************************************************");
-                        printToOutput("Welcome. Type 'help' to see available commands.");
-                        printToOutput("**************************************************");
-                        
-                        cmdLine.focus();
-                        // Pre-load ASCII art from the .txt file
-                        loadAsciiFromTxt('profile-ascii.txt');
-                    }, 500);
-                }
-            }
-            runBootSequence();
-
-            // Terminal Event Listeners
-            terminalView.addEventListener('click', (e) => {
-                // *** NEW: Event delegation for clickable files ***
-                if (e.target.classList.contains('terminal-file')) {
-                    const command = e.target.dataset.command;
-                    // Simulate typing the command
-                    printToOutput(`<span class="prompt-symbol">${promptSymbol.textContent}</span> ${command}`); 
-                    parseCommand(command);
-                    terminalView.scrollTop = terminalView.scrollHeight; // Scroll down
-                }
-                else if (window.getSelection().type !== 'Range') {
-                   cmdLine.focus();
-                }
-            });
-            
-            cmdLine.addEventListener('input', () => {
-                fakeInput.textContent = cmdLine.value;
-            });
-            cmdLine.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const command = cmdLine.value.trim().toLowerCase();
-                    printToOutput(`<span class="prompt-symbol">${promptSymbol.textContent}</span> ${cmdLine.value}`);
-                    if (command) {
-                        commandHistory.push(command);
-                        historyIndex = commandHistory.length;
-                        parseCommand(command);
-                    }
-                    cmdLine.value = '';
-                    fakeInput.textContent = '';
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    if (historyIndex > 0) {
-                        historyIndex--;
-                        cmdLine.value = commandHistory[historyIndex];
-                        fakeInput.textContent = cmdLine.value;
-                    }
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    if (historyIndex < commandHistory.length - 1) {
-                        historyIndex++;
-                        cmdLine.value = commandHistory[historyIndex];
-                        fakeInput.textContent = cmdLine.value;
-                    } else {
-                        historyIndex = commandHistory.length;
-                        cmdLine.value = '';
-                        fakeInput.textContent = '';
-                    }
-                }
-            });
-
-            // Terminal Command Parser
-            function parseCommand(command) {
-                switch (command) {
-                    case 'help': printHelp(); break;
-                    case 'gui':
-                        printToOutput("Loading Graphical User Interface...");
-                        setTimeout(switchToGui, 500);
-                        break;
-                    case 'whoami': case 'bio': printBio(); break;
-                    case 'skills': case 'expertise': printSkills(); break;
-                    case 'education': printEducation(); break;
-                    case 'projects': printProjects(); break;
-                    case 'mission': printMission(); break;
-                    case 'vision': printVision(); break;
-                    case 'socials': case 'contact': case 'connect': printContact(); break;
-                    case 'ls': case 'dir': printLs(); break;
-                    case 'clear': case 'cls': output.innerHTML = ''; break;
-                    case 'reboot':
-                        output.innerHTML = '';
-                        switchToTerminal();
-                        loader.style.opacity = 1;
-                        loader.style.visibility = "visible";
-                        bootSequence.innerHTML = '';
-                        bootLineIndex = 0;
-                        runBootSequence();
-                        break;
-                    default:
-                        printToOutput(`'${command}': command not recognized. Type 'help' for assistance.`);
-                }
-                terminalView.scrollTop = terminalView.scrollHeight;
-            }
-
-            // --- TERMINAL COMMAND OUTPUTS ---
-            function printToOutput(html) {
-                const p = document.createElement('p');
-                p.innerHTML = html;
-                output.appendChild(p);
-                addCursorEvents(); // Re-apply events for new elements
-            }
-
-            function printHelp() {
-                printToOutput(`
-<pre>
-  FUAD.AI Command Help
-  
-  <b>whoami</b>    - Displays my professional bio.
-  <b>gui</b>       - Switches to the graphical interface.
-  <b>skills</b>    - Lists my technical expertise.
-  <b>education</b> - Shows my academic qualifications.
-  <b>projects</b>  - Shows my featured projects.
-  <b>mission</b>   - Displays my personal mission.
-  <b>vision</b>    - Displays my personal vision.
-  <b>socials</b>   - Shows all my social & contact links.
-  <b>ls</b>        - Lists all files in the directory (clickable).
-  <b>clear</b>     - Clears the terminal screen.
-  <b>reboot</b>    - Re-initializes the portfolio.
-</pre>`);
-            }
-            
-            function printLs() {
-                printToOutput(`
-<pre>
-  Volume F: \\ Users \\ Fuad
-  
-  <span class="terminal-file" data-command="gui" title="Run 'gui'">My Computer.lnk</span>
-  <span class="terminal-file" data-command="whoami" title="Run 'whoami'">About Me.exe</span>
-  <span class="terminal-file" data-command="socials" title="Run 'socials'">Contact Me.lnk</span>
-  <span class="terminal-file" data-command="projects" title="Run 'projects'">Projects.lnk</span>
-  <span class="terminal-file" data-command="readme" title="Run 'readme'">README.txt</span>
-  <span class="terminal-file" data-command="education" title="Run 'education'">Education.txt</span>
-  <span class="terminal-file" data-command="vision" title="Run 'vision'">vision.txt</span>
-</pre>
-                `);
-            }
-
-            function printBio() {
-                const art_to_display = global_ascii_art 
-                    ? `<pre class="ascii-art">${global_ascii_art}</pre>` 
-                    : `<pre class="ascii-art" style="color: #ff5555;">ERROR: 'profile-ascii.txt' not found.\nMake sure it's in the same folder as index.html.</pre>`;
-                
-                printToOutput(`
-<h2>Bio</h2>
-${art_to_display}
-<p><b>Fuad Al Firoj</b></p>
-<p>Developer • AI Specialist • Solution Creator</p>
-<p>With a strong foundation in development and a passion for innovation, I generate transformative ideas and create impactful solutions.</p>
-                `);
-            }
-            
-            function printEducation() {
-                printToOutput(`
-<h2>Qualifications</h2>
-<div class="project">
-  <p class="project-title">B.Sc. in Computer Science & Engineering</p>
-  <p>University of Bogura (UOB) | 2020 - 2024</p>
-</div>
-<div class="project">
-  <p class="project-title">Higher Secondary Certificate (HSC)</p>
-  <p>Bogura Cantonment Public School & College | 2017 - 2019</p>
-</div>`);
-            }
-
-            function printSkills() {
-                printToOutput(`
-<h2>Technical Expertise</h2>
-<pre>
-  <b>AI & ML</b>
-  ├─ Developing intelligent solutions using advanced
-  │  machine learning and neural networks.
-  <b>Development</b>
-  ├─ Building responsive, innovative, and scalable
-  │  web applications from the ground up.
-  <b>Cloud Solutions</b>
-  ├─ Implementing scalable cloud architectures and
-  │  serverless applications.
-  <b>System Architecture</b>
-  ├─ Designing robust and scalable system 
-  │  architectures for complex applications.
-</pre>`);
-            }
-            
-            function printProjects() { printToOutput(`<h2>Featured Projects</h2><div class="project"><p class="project-title">1. AI-Powered Solution (Python/ML)</p><p>A custom machine learning model to analyze and predict trends...</p><p class="tags">Tags: Python, TensorFlow, API</p></div><div class="project"><p class="project-title">2. E-Commerce Platform (PHP)</p><p>A full-stack online store built from scratch...</p><p class="tags">Tags: PHP, MySQL, JavaScript</p></div>`); }
-            function printMission() { printToOutput(`<h2>Mission</h2><p>To empower youth through innovative leadership initiatives...</p>`); }
-            function printVision() { printToOutput(`<h2>Vision</h2><p>To build a world where every young person has the opportunity to lead...</p>`); }
-
-            function printContact() {
-                printToOutput(`
-<h2>Connect With Me</h2>
-<pre>
-  <b>GitHub</b>     <a href="https://github.com" target="_blank">github.com/yourusername</a>
-  <b>LinkedIn</b>   <a href="https://linkedin.com" target="_blank">linkedin.com/in/yourusername</a>
-  <b>Facebook</b>   <a href="https://facebook.com" target="_blank">facebook.com/yourusername</a>
-  <b>...etc</b>
-</pre>`);
-            }
-            
-            // --- WIN98 GUI LOGIC ---
-            
-            // 1. Window Content
-            const windowData = {
-                'computer': {
-                    title: 'File Manager (F:)',
-                    content: `
-                        <h3>F: \\ Users \\ Fuad</h3>
-                        <ul class="file-manager-list">
-                            <li data-open-window="whoami" title="Double-click to open"><i class="fas fa-user-circle"></i>About Me.exe</li>
-                            <li data-open-window="projects" title="Double-click to open"><i class="fas fa-folder-open"></i>Projects.lnk</li>
-                            <li data-open-window="socials" title="Double-click to open"><i class="fas fa-address-book"></i>Contact Me.lnk</li>
-                            <li data-open-window="education" title="Double-click to open"><i class="fas fa-file-alt"></i>Education.txt</li>
-                            <li data-open-window="readme" title="Double-click to open"><i class="fas fa-file-alt"></i>README.txt</li>
-                            <li data-open-window="vision" title="Double-click to open"><i class="fas fa-file-alt"></i>vision.txt</li>
-                        </ul>
-                    `
-                },
-                'whoami': {
-                    title: 'About Me.exe',
-                    // This now directly uses your 'profile.jpg'
-                    content: `
-                        <img id="profile-img-gui" src="profile.jpg" alt="Fuad Al Firoj" onerror="this.style.display='none'">
-                        <h3>Fuad Al Firoj</h3>
-                        <p><b>Developer • AI Specialist • Solution Creator</b></p>
-                        <p>With a strong foundation in development and a passion for innovation, I generate transformative ideas and create impactful solutions.</p>
-                        <p>I'm a creative developer dedicated to crafting innovative solutions that bridge technology and real-world challenges.</p>
-                    `
-                },
-                'projects': {
-                    title: 'Projects',
-                    content: `
-                        <h3>Featured Projects</h3>
-                        <p><b>AI-Powered Solution (Python/ML)</b></p>
-                        <p>A custom machine learning model to analyze and predict trends from large datasets. Deployed as a scalable API for application integration.</p>
-                        <p><i>Tags: Python, TensorFlow, API</i></p>
-                        <hr>
-                        <p><b>E-Commerce Platform (PHP)</b></p>
-                        <p>A full-stack online store built from scratch with a secure payment gateway, admin dashboard for managing inventory, and a custom user auth system.</p>
-                        <p><i>Tags: PHP, MySQL, JavaScript, Stripe API</i></p>
-                    `
-                },
-                'education': {
-                    title: 'Education.txt',
-                    content: `
-                        <h3>Academic Qualifications</h3>
-                        <p><b>B.Sc. in Computer Science & Engineering</b></p>
-                        <ul>
-                            <li>University of Bogura (UOB)</li>
-                            <li>2020 - 2024</li>
-                        </ul>
-                        <p><b>Higher Secondary Certificate (HSC)</b></p>
-                        <ul>
-                            <li>Bogura Cantonment Public School & College</li>
-                            <li>2017 - 2019</li>
-                        </ul>
-                    `
-                },
-                'socials': {
-                    title: 'Contact Me',
-                    content: `
-                        <h3>Get In Touch</h3>
-                        <p>Let's build something amazing together. Links will open in a new tab.</p>
-                        <ul class="social-list">
-                            <li><a href="https://github.com" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
-                            <li><a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
-                            <li><a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></li>
-                            <li><a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
-                            <li><a href="mailto:test@example.com" target="_blank"><i class="fas fa-envelope"></i> Email</a></li>
-                        </ul>
-                    `
-                },
-                'readme': {
-                    title: 'README.txt',
-                    content: `
-                        <h3>Welcome to My System!</h3>
-                        <p><b>There are two modes:</b></p>
-                        <ul>
-                            <li><b>Terminal:</b> A command-line interface.</li>
-                            <li><b>GUI:</b> A retro desktop for a visual experience.</li>
-                        </ul>
-                        <p><b>Features:</b></p>
-                        <ul>
-                            <li>Double-click icons to open them.</li>
-                            <li>Open 'My Computer' to see a file manager.</li>
-                            <li>Type 'whoami' in terminal to see your profile art (loads from 'profile-ascii.txt').</li>
-                        </ul>
-                    `
-                },
-                'vision': {
-                    title: 'vision.txt',
-                    content: `
-                        <h3>My Vision</h3>
-                        <p>To build a world where every young person has the opportunity to lead, innovate, and create meaningful change.</p>
-                        <p>Envisioning a future where youth-led initiatives shape a more inclusive, sustainable, and empowered society.</p>
-                    `
-                }
-            };
-            
-            // 2. Window Z-Index Manager
-            let highestZ = 100;
-
-            // 3. Create Window Function
-            function createWindow(windowId) {
-                const windowElId = `window-${windowId}`;
-                const tabElId = `tab-${windowId}`;
-                
-                const existingWindow = document.getElementById(windowElId);
-                if (existingWindow) {
-                    if (existingWindow.classList.contains('minimized')) {
-                        restoreWindow(existingWindow, document.getElementById(tabElId));
-                    }
-                    existingWindow.style.zIndex = ++highestZ;
-                    return existingWindow; // Return existing window
-                }
-                
-                const data = windowData[windowId];
-                if (!data) return;
-                
-                const newWindow = document.createElement('div');
-                newWindow.className = 'window';
-                newWindow.id = windowElId;
-                newWindow.style.zIndex = ++highestZ;
-                newWindow.style.top = `${Math.random() * 50 + 40}px`;
-                newWindow.style.left = `${Math.random() * 150 + 150}px`;
-                
-                newWindow.innerHTML = `
-                    <div class="window-title-bar">
-                        <span class="title-bar-text">${data.title}</span>
-                        <div class="title-bar-buttons">
-                            <button class="title-bar-button minimize-button" aria-label="Minimize">_</button>
-                            <button class="title-bar-button maximize-button" aria-label="Maximize">◻</button>
-                            <button class="title-bar-button close-button" aria-label="Close">X</button>
-                        </div>
-                    </div>
-                    <div class="window-body win-content">
-                        ${data.content}
-                    </div>
-                    <div class="resize-grip"></div>
-                `;
-                
-                windowContainer.appendChild(newWindow);
-                const taskbarTab = createTaskbarTab(newWindow, data.title, tabElId);
-                
-                // Add Functionality
-                dragElement(newWindow);
-                resizeElement(newWindow);
-                
-                newWindow.querySelector('.close-button').addEventListener('click', () => {
-                    newWindow.remove();
-                    taskbarTab.remove();
-                });
-                
-                newWindow.querySelector('.minimize-button').addEventListener('click', () => {
-                    minimizeWindow(newWindow, taskbarTab);
-                });
-                
-                newWindow.querySelector('.maximize-button').addEventListener('click', (e) => {
-                    maximizeWindow(newWindow, e.currentTarget);
-                });
-                
-                newWindow.addEventListener('mousedown', () => {
-                    newWindow.style.zIndex = ++highestZ;
-                    document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
-                    taskbarTab.classList.add('active');
-                });
-                
-                // Add File Manager functionality
-                if (windowId === 'computer') {
-                    newWindow.querySelectorAll('.file-manager-list li').forEach(li => {
-                        li.addEventListener('dblclick', (e) => {
-                            const openWindowId = e.currentTarget.dataset.openWindow;
-                            createWindow(openWindowId);
-                        });
-                    });
-                }
-                
-                addCursorEvents();
-                return newWindow; // Return new window
-            }
-            
-            // 4. Icon Click Listeners
-            document.querySelectorAll('.desktop-icon').forEach(icon => {
-                icon.addEventListener('dblclick', () => {
-                    const windowId = icon.getAttribute('data-window-id');
-                    createWindow(windowId);
-                });
-                icon.addEventListener('click', () => {
-                    document.querySelectorAll('.desktop-icon.selected').forEach(selected => selected.classList.remove('selected'));
-                    icon.classList.add('selected');
-                });
-            });
-            guiView.addEventListener('click', (e) => {
-                if (e.target === guiView) {
-                     document.querySelectorAll('.desktop-icon.selected').forEach(selected => selected.classList.remove('selected'));
-                }
-            });
-
-            // 5. Window Functions (Minimize, Maximize, etc.)
-            function createTaskbarTab(windowEl, title, tabElId) {
-                const tab = document.createElement('button');
-                tab.className = 'taskbar-tab active';
-                tab.id = tabElId;
-                tab.textContent = title;
-                
-                document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
-                taskbarTabs.appendChild(tab);
-                
-                tab.addEventListener('click', () => {
-                    if (windowEl.classList.contains('minimized')) {
-                        restoreWindow(windowEl, tab);
-                    } else {
-                        if (windowEl.style.zIndex == highestZ - 1) { // Check if it's already active
-                            minimizeWindow(windowEl, tab);
-                        } else {
-                            windowEl.style.zIndex = ++highestZ;
-                            document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
-                            tab.classList.add('active');
-                        }
-                    }
-                });
-                addCursorEvents();
-                return tab;
-            }
-            
-            function minimizeWindow(windowEl, tabEl) {
-                windowEl.classList.add('minimized');
-                tabEl.classList.remove('active');
-            }
-            
-            function restoreWindow(windowEl, tabEl) {
-                windowEl.classList.remove('minimized');
-                document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
-                tabEl.classList.add('active');
-                windowEl.style.zIndex = ++highestZ;
-            }
-            
-            function maximizeWindow(windowEl, maxButton) {
-                // *** THIS IS THE MAXIMIZE FIX ***
-                if (windowEl.classList.contains('maximized')) {
-                    // Restore
-                    windowEl.classList.remove('maximized');
-                    windowEl.style.top = windowEl.dataset.oldTop;
-                    windowEl.style.left = windowEl.dataset.oldLeft;
-                    windowEl.style.width = windowEl.dataset.oldWidth;
-                    windowEl.style.height = windowEl.dataset.oldHeight;
-                    maxButton.textContent = '◻';
-                } else {
-                    // Maximize
-                    // Store old position
-                    windowEl.dataset.oldTop = windowEl.style.top;
-                    windowEl.dataset.oldLeft = windowEl.style.left;
-                    // *** BUG FIX: Store *current* offsetWidth/Height ***
-                    windowEl.dataset.oldWidth = `${windowEl.offsetWidth}px`;
-                    windowEl.dataset.oldHeight = `${windowEl.offsetHeight}px`;
-                    
-                    windowEl.classList.add('maximized');
-                    maxButton.textContent = '❐'; // Restore icon
-                }
-            }
-            
-            // 6. Drag & Resize Functions
-            function dragElement(elmnt) {
-                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-                
-                const titleBar = elmnt.querySelector(".window-title-bar");
-                const dragHandle = titleBar || elmnt;
-                
-                dragHandle.onmousedown = dragMouseDown;
-
-                function dragMouseDown(e) {
-                    e = e || window.event;
-                    e.preventDefault();
-                    
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    elmnt.style.zIndex = ++highestZ;
-                    
-                    if (elmnt.id.startsWith('window-')) {
-                         document.querySelectorAll('.taskbar-tab').forEach(t => t.classList.remove('active'));
-                         const tabId = `tab-${elmnt.id.split('-')[1]}`;
-                         const tab = document.getElementById(tabId);
-                         if (tab) tab.classList.add('active');
-                    }
-                    
-                    document.onmouseup = closeDragElement;
-                    document.onmousemove = elementDrag;
-                }
-
-                function elementDrag(e) {
-                    e = e || window.event;
-                    e.preventDefault();
-                    
-                    if (elmnt.classList.contains('maximized')) return;
-                    
-                    pos1 = pos3 - e.clientX;
-                    pos2 = pos4 - e.clientY;
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    
-                    let newTop = elmnt.offsetTop - pos2;
-                    let newLeft = elmnt.offsetLeft - pos1;
-                    
-                    const desktop = guiView;
-                    if (newTop < 0) newTop = 0;
-                    if (newLeft < 0) newLeft = 0;
-                    if (newTop + elmnt.offsetHeight > desktop.clientHeight) newTop = desktop.clientHeight - elmnt.offsetHeight;
-                    if (newLeft + elmnt.offsetWidth > desktop.clientWidth) newLeft = desktop.clientWidth - elmnt.offsetWidth;
-                    
-                    elmnt.style.top = newTop + "px";
-                    elmnt.style.left = newLeft + "px";
-                }
-
-                function closeDragElement() {
-                    document.onmouseup = null;
-                    document.onmousemove = null;
-                }
-            }
-            
-            function resizeElement(elmnt) {
-                const resizeGrip = elmnt.querySelector('.resize-grip');
-                if (!resizeGrip) return; 
-                
-                let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-                resizeGrip.onmousedown = resizeMouseDown;
-                
-                function resizeMouseDown(e) {
-                    e = e || window.event;
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    
-                    document.onmouseup = closeResizeElement;
-                    document.onmousemove = elementResize;
-                }
-                
-                function elementResize(e) {
-                    e = e || window.event;
-                    e.preventDefault();
-                    
-                    if (elmnt.classList.contains('maximized')) return;
-                    
-                    pos1 = pos3 - e.clientX;
-                    pos2 = pos4 - e.clientY;
-                    pos3 = e.clientX;
-                    pos4 = e.clientY;
-                    
-                    let newWidth = elmnt.offsetWidth - pos1;
-                    let newHeight = elmnt.offsetHeight - pos2;
-                    
-                    const minWidth = parseInt(elmnt.style.minWidth) || 300;
-                    const minHeight = parseInt(elmnt.style.minHeight) || 200;
-
-                    if (newWidth > minWidth) elmnt.style.width = newWidth + "px";
-                    if (newHeight > minHeight) elmnt.style.height = newHeight + "px";
-                }
-                
-                function closeResizeElement() {
-                    document.onmouseup = null;
-                    document.onmousemove = null;
-                }
-            }
-            
-            // 7. Make existing icons draggable
-            document.querySelectorAll('.desktop-icon').forEach(dragElement);
-            
-            // 8. ASCII Art Loader
-            // This function fetches the .txt file and stores it in the global variable
-            function loadAsciiFromTxt(url) {
-                fetch(url)
-                    .then(response => {
-                        if (response.ok) {
-                            return response.text();
-                        }
-                        throw new Error('Network response was not ok.');
-                    })
-                    .then(text => {
-                        global_ascii_art = text; // Save the loaded art
-                    })
-                    .catch(error => {
-                        console.error('Failed to fetch ASCII art:', error);
-                        // global_ascii_art remains empty, so printBio() will show an error
-                    });
-            }
-
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
