@@ -47,7 +47,7 @@
       "windowTitle": "Gaming History",
       "content": {
         "type": "html",
-        "html": "<h3>Gaming History</h3><h4>Valorant</h4><ul><li><b>In-Game Name (IGN):</b> YourNameHere #TAG</li><li><b>Rank:</b> PlaceholderRank</li><li><b>Main Agent:</b> PlaceholderAgent</li><li><b>Server:</b> Asia (IN)</li></ul><hr><h4>Other Games</h4><ul><li>Placeholder Game 1</li><li>Placeholder Game 2</li></ul>"
+        "html": "<h3>Gaming History</h3><h4>Valorant</h4><ul><li><b>In-Game Name (IGN):</b> schrodinger #0014</li><li><b>Rank:</b> Silver</li><li><b>Main Agent:</b> Chamebr</li><li><b>Server:</b> Asia (IN)</li></ul><hr><h4>Other Games</h4><ul><li>Placeholder Game 1</li><li>Placeholder Game 2</li></ul>"
       }
     },
     {
@@ -150,4 +150,5 @@
       "description": "Re-initializes the portfolio."
     }
   ]
+
 }
